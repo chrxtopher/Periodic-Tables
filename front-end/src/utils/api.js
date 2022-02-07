@@ -55,7 +55,7 @@ async function fetchJson(url, options, onCancel) {
 /**
  * Retrieves all existing reservation.
  * @returns {Promise<[reservation]>}
- *  a promise that resolves to a possibly empty array of reservation saved in the database.
+ *  a promise that resolves to a possibly empty array of reservations saved in the database.
  */
 
 export async function listReservations(params, signal) {
