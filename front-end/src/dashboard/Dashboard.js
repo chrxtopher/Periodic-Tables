@@ -25,7 +25,10 @@ function Dashboard({ date }) {
 
   const reservationsList = reservations.map((reservation) => {
     return (
-      <div className="card bg-light border-dark m-1">
+      <div
+        className="card bg-light border-dark m-1"
+        key={reservation.reservation_id}
+      >
         <div className="card-body">
           <h4 className="card-title text-center">
             {reservation.first_name} {reservation.last_name} : Party of{" "}
@@ -48,8 +51,17 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1 className="display-4 text-center">Dashboard</h1>
-      <div className="d-md-flex mb-3">
+      <div className="d-md-flex mb-3 text-center">
         <h4 className="mb-0">Reservations for date: {date}</h4>
+      </div>
+      <div className="text-center">
+        <button className="btn btn-primary border border-dark m-1">Next</button>
+        <button className="btn btn-primary border border-dark m-1">
+          Previous
+        </button>
+        <button className="btn btn-warning border border-dark m-1">
+          Today
+        </button>
       </div>
       <ErrorAlert error={reservationsError} />
       <div>{reservationsList}</div>
