@@ -51,20 +51,22 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1 className="display-4 text-center">Dashboard</h1>
-      <div className="d-md-flex mb-3 text-center">
-        <h4 className="mb-0">Reservations for date: {date}</h4>
+      <div className="d-md-flex mb-3">
+        <h4 className="text-center">Reservations for date: {date}</h4>
       </div>
       <div className="text-center">
-        <button className="btn btn-primary border border-dark m-1">Next</button>
         <button className="btn btn-primary border border-dark m-1">
           Previous
         </button>
         <button className="btn btn-warning border border-dark m-1">
           Today
         </button>
+        <button className="btn btn-primary border border-dark m-1">Next</button>
       </div>
       <ErrorAlert error={reservationsError} />
-      <div>{reservationsList}</div>
+      <div className="d-flex flex-wrap justify-content-center">
+        {reservationsList}
+      </div>
     </main>
   );
 }
