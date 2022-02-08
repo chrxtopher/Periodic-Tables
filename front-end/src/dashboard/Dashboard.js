@@ -26,7 +26,7 @@ function Dashboard({ date }) {
   const reservationsList = reservations.map((reservation) => {
     return (
       <div
-        className="card bg-light border-dark m-1"
+        className="card bg-light border-dark m-1 shadow-sm"
         key={reservation.reservation_id}
       >
         <div className="card-body">
@@ -50,10 +50,9 @@ function Dashboard({ date }) {
 
   return (
     <main>
-      <h1 className="display-4 text-center">Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="text-center">Reservations for date: {date}</h4>
-      </div>
+      <h1 className="display-3 text-center">Dashboard</h1>
+      <h4 className="text-center">Reservations for date: {date}</h4>
+
       <div className="text-center">
         <button className="btn btn-primary border border-dark m-1">
           Previous
