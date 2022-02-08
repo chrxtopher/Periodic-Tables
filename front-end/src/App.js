@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Layout from "./layout/Layout";
-import ReservationForm from "./reservations/CreateReservation";
 
 /**
  * Defines the root application component.
@@ -10,11 +9,8 @@ import ReservationForm from "./reservations/CreateReservation";
 function App() {
   return (
     <Switch>
-      <Route exact path="/dashboard">
+      <Route path="/">
         <Layout />
-      </Route>
-      <Route exact path="/reservations/new">
-        <ReservationForm />
       </Route>
     </Switch>
   );
