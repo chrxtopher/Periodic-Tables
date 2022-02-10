@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
+import { useHistory } from "react-router-dom";
  
-/*
-first name
-last name
-mobile number
-date of reservation
-time of reservation
-people in party, at least 1
-*/
+const emptyReservationForm = {
+  first_name: "",
+  last_name: "",
+  mobile_number: "",
+  reservation_date: "",
+  reservation_time: "",
+  people: "",
+}
  
 function ReservationForm() {
+ const history = useHistory();
  const [newReservation, setNewReservation] = useState({});
  
  ////////////////////
@@ -49,7 +51,19 @@ function ReservationForm() {
  
  const handleSubmit = async (event) => {
    event.preventDefault();
+   const abortController = new AbortController();
+   try {
+     await createReservation(newReservation, abortController.signal);
+     setNewReservation({...emptyReservationForm})
+     history.push("/");
+   } catch (error) {
+     console.log(error);
+   }
+
+   return () => abortController.abort();
  };
+
+
  
  return (
    <>
