@@ -52,7 +52,7 @@ function ReservationForm() {
  
  return (
    <div>
-     <h1 className="display-4 text-center">Create a Reservation</h1>
+     <h1 className="display-4 text-center mt-3">Create a Reservation</h1>
     <form onSubmit={handleSubmit} className="m-5">
       <div>
         <div className="row">
@@ -61,6 +61,7 @@ function ReservationForm() {
               First Name
             </label>
             <input
+              name="first_name"
               onChange={handleFirstNameChange}
               className="form-control shadow"
               type="text"
@@ -73,11 +74,12 @@ function ReservationForm() {
               Last Name
             </label>
             <input 
-            onChange={handleLastNameChange} 
-            className="form-control shadow" 
-            type="text" 
-            placeholder="Last Name" 
-            required 
+              name="last_name"
+              onChange={handleLastNameChange} 
+              className="form-control shadow" 
+              type="text" 
+              placeholder="Last Name" 
+              required 
             />
           </div>
         </div>
@@ -86,6 +88,7 @@ function ReservationForm() {
             Mobile Number
           </label>
           <input
+            name="mobile-number"
             onChange={handleMobileNumberChange}
             className="form-control shadow"
             type="text"
@@ -99,10 +102,11 @@ function ReservationForm() {
               Date of Reservation
             </label>
             <input 
-            className="form-control shadow" 
-            type="date" 
-            onChange={handleDateChange} 
-            required
+              name="reservation_date"
+              className="form-control shadow" 
+              type="date" 
+              onChange={handleDateChange} 
+              required
             />
             <small className="ml-2">Closed on Tuesday</small>
           </div>
@@ -111,22 +115,24 @@ function ReservationForm() {
               Time of Reservation
             </label>
             <input 
-            className="form-control shadow" 
-            type="time" 
-            onChange={handleTimeChange} 
-            required
+              name="reservation_time"
+              className="form-control shadow" 
+              type="time" 
+              onChange={handleTimeChange} 
+              required
             />
           </div>
         </div>
         <div className="col mb-3">
           <label className="ml-2" htmlFor="partySize">Party Size</label>
           <input 
-          className="form-control shadow" 
-          type="number" 
-          min={1} 
-          placeholder="1" 
-          onChange={handlePartyChange} 
-          required 
+            name="people"
+            className="form-control shadow" 
+            type="number" 
+            min={1} 
+            placeholder="1" 
+            onChange={handlePartyChange} 
+            required 
           />
         </div>
       </div>
