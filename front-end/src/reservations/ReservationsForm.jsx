@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createReservation } from "../utils/api";
  
 /*
 first name
@@ -17,7 +18,7 @@ function ReservationForm() {
  /////////////////////
  
  const handleFirstNameChange = (event) => {
-  setNewReservation({ ...newReservation, first_name: event.target.value});
+  setNewReservation({ ...newReservation, [event.target.name]: event.target.value});
   console.log(newReservation);
  };
 
@@ -51,7 +52,7 @@ function ReservationForm() {
  };
  
  return (
-   <div>
+   <>
      <h1 className="display-4 text-center mt-3">Create a Reservation</h1>
     <form onSubmit={handleSubmit} className="m-5">
       <div>
@@ -83,18 +84,32 @@ function ReservationForm() {
             />
           </div>
         </div>
-        <div className="col mb-3">
-          <label className="ml-2 mb-1" htmlFor="mobileNumber">
-            Mobile Number
-          </label>
-          <input
-            name="mobile-number"
-            onChange={handleMobileNumberChange}
-            className="form-control shadow"
-            type="text"
-            placeholder="xxx-xxx-xxxx"
-            required
+        <div className="row">
+          <div className="col mb-3">
+            <label className="ml-2 mb-1" htmlFor="mobileNumber">
+              Mobile Number
+            </label>
+            <input
+              name="mobile_number"
+              onChange={handleMobileNumberChange}
+              className="form-control shadow"
+              type="text"
+              placeholder="xxx-xxx-xxxx"
+              required
+            />
+          </div>
+          <div className="col mb-3">
+          <label className="ml-2" htmlFor="partySize">Party Size</label>
+          <input 
+            name="people"
+            className="form-control shadow" 
+            type="number" 
+            min={1} 
+            placeholder="1" 
+            onChange={handlePartyChange} 
+            required 
           />
+        </div>
         </div>
         <div className="row">
           <div className="col mb-3">
@@ -123,18 +138,7 @@ function ReservationForm() {
             />
           </div>
         </div>
-        <div className="col mb-3">
-          <label className="ml-2" htmlFor="partySize">Party Size</label>
-          <input 
-            name="people"
-            className="form-control shadow" 
-            type="number" 
-            min={1} 
-            placeholder="1" 
-            onChange={handlePartyChange} 
-            required 
-          />
-        </div>
+        
       </div>
       <div className="d-flex ml-3 mt-4 justify-content-center">
         <a className="btn btn-danger btn-lg border border-dark mr-1" href="/">
@@ -148,7 +152,7 @@ function ReservationForm() {
         </button>
       </div>
     </form>
-   </div>
+   </>
  );
 }
  
