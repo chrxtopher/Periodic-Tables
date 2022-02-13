@@ -29,8 +29,8 @@ function Routes() {
       <Route exact={true} path="/reservations/new">
         <ReservationForm />
       </Route>
-      <Route>
-        <CreateTable exact={true} path="/tables/new" />
+      <Route exact={true} path="/tables/new">
+        <CreateTable />
       </Route>
       <Route>
         <NotFound />
