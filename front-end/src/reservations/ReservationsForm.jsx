@@ -18,34 +18,9 @@ function ReservationForm() {
  ////////////////////
  // HANDLERS BELOW //
  /////////////////////
- 
- const handleFirstNameChange = (event) => {
-  setNewReservation({ ...newReservation, [event.target.name]: event.target.value});
-  console.log(newReservation);
- };
 
- const handleLastNameChange = (event) => {
-  setNewReservation({...newReservation, last_name: event.target.value});
-  console.log(newReservation);
- }
-
- const handleMobileNumberChange = (event) => {
-   setNewReservation({...newReservation, mobile_number: event.target.value});
-   console.log(newReservation);
- }
-
- const handleDateChange = (event) => {
-   setNewReservation({...newReservation, reservation_date: event.target.value})
-   console.log(newReservation);
- }
-
- const handleTimeChange = (event) => {
-   setNewReservation({...newReservation, reservation_time: event.target.value})
-   console.log(newReservation);
- }
-
- const handlePartyChange = (event) => {
-   setNewReservation({...newReservation, people: event.target.value})
+ const handleChange = (event) => {
+   setNewReservation({...newReservation, [event.target.name]: event.target.value})
    console.log(newReservation);
  }
  
@@ -59,7 +34,7 @@ function ReservationForm() {
    } catch (error) {
      console.log(error);
    }
-
+   console.log("Submitted!");
    return () => abortController.abort();
  };
 
@@ -77,7 +52,7 @@ function ReservationForm() {
             </label>
             <input
               name="first_name"
-              onChange={handleFirstNameChange}
+              onChange={handleChange}
               className="form-control shadow"
               type="text"
               placeholder="First Name"
@@ -90,7 +65,7 @@ function ReservationForm() {
             </label>
             <input 
               name="last_name"
-              onChange={handleLastNameChange} 
+              onChange={handleChange} 
               className="form-control shadow" 
               type="text" 
               placeholder="Last Name" 
@@ -105,7 +80,7 @@ function ReservationForm() {
             </label>
             <input
               name="mobile_number"
-              onChange={handleMobileNumberChange}
+              onChange={handleChange}
               className="form-control shadow"
               type="text"
               placeholder="xxx-xxx-xxxx"
@@ -120,7 +95,7 @@ function ReservationForm() {
             type="number" 
             min={1} 
             placeholder="1" 
-            onChange={handlePartyChange} 
+            onChange={handleChange} 
             required 
           />
         </div>
@@ -134,7 +109,7 @@ function ReservationForm() {
               name="reservation_date"
               className="form-control shadow" 
               type="date" 
-              onChange={handleDateChange} 
+              onChange={handleChange} 
               required
             />
             <small className="ml-2">Closed on Tuesday</small>
@@ -147,7 +122,7 @@ function ReservationForm() {
               name="reservation_time"
               className="form-control shadow" 
               type="time" 
-              onChange={handleTimeChange} 
+              onChange={handleChange} 
               required
             />
           </div>

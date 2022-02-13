@@ -44,6 +44,12 @@ function Dashboard({ date }) {
             <strong>Time:</strong> {reservation.reservation_time}
           </p>
         </div>
+        <a
+          className="btn btn-light btn-lg border border-dark"
+          href={`/reservations/${reservation.reservation_id}/seat`}
+        >
+          Seat
+        </a>
       </div>
     );
   });
