@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useHistory, Link, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { today, previous, next } from "../utils/date-time";
 
 /**
@@ -71,15 +71,24 @@ function Dashboard() {
       <h4 className="text-center">Reservations for date: {date}</h4>
 
       <div className="text-center">
-        <button className="btn btn-primary border border-dark m-1">
+        <button
+          className="btn btn-primary border border-dark m-1"
+          onClick={() => setDate(previous(date))}
+        >
           Previous
         </button>
-        <Link to={`/dashboard?date=${date}`}>
-          <button className="btn btn-warning border border-dark m-1">
-            Today
-          </button>
-        </Link>
-        <button className="btn btn-primary border border-dark m-1">Next</button>
+        <button
+          className="btn btn-warning border border-dark m-1"
+          onClick={() => setDate(today())}
+        >
+          Today
+        </button>
+        <button
+          className="btn btn-primary border border-dark m-1"
+          onClick={() => setDate(next(date))}
+        >
+          Next
+        </button>
       </div>
       <ErrorAlert error={reservationsError} />
       <div className="d-flex flex-wrap justify-content-center">
