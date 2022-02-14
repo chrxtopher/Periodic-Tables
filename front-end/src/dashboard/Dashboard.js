@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import { useHistory, Link } from "react-router-dom";
 
 /**
  * Defines the dashboard page.
@@ -45,7 +46,7 @@ function Dashboard({ date }) {
           </p>
         </div>
         <a
-          className="btn btn-light btn-lg border border-dark"
+          className="btn btn-success border border-dark"
           href={`/reservations/${reservation.reservation_id}/seat`}
         >
           Seat
@@ -63,9 +64,11 @@ function Dashboard({ date }) {
         <button className="btn btn-primary border border-dark m-1">
           Previous
         </button>
-        <button className="btn btn-warning border border-dark m-1">
-          Today
-        </button>
+        <Link to={`/dashboard?date=${date}`}>
+          <button className="btn btn-warning border border-dark m-1">
+            Today
+          </button>
+        </Link>
         <button className="btn btn-primary border border-dark m-1">Next</button>
       </div>
       <ErrorAlert error={reservationsError} />
