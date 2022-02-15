@@ -4,7 +4,7 @@ function ReservationsList(reservations = []) {
   return reservations.map((reservation) => {
     return (
       <div
-        className="card bg-light border-dark m-1 shadow-sm"
+        className="card bg-light border-dark m-4 shadow"
         key={reservation.reservation_id}
       >
         <div className="card-body">

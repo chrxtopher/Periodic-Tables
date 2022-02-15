@@ -39,24 +39,24 @@ function Dashboard() {
 
   return (
     <main>
-      <h1 className="display-3 text-center">Dashboard</h1>
-      <h4 className="text-center">Reservations for date: {date}</h4>
+      <h1 className="display-4 text-center">Dashboard</h1>
+      <h3 className="text-center">Reservations for date: {date}</h3>
 
-      <div className="text-center">
+      <div className="d-flex justify-content-center my-3">
         <button
-          className="btn btn-primary border border-dark m-1"
+          className="btn-lg btn-primary border border-dark mx-2 shadow"
           onClick={() => setDate(previous(date))}
         >
           Previous
         </button>
         <button
-          className="btn btn-warning border border-dark m-1"
+          className="btn-lg btn-warning border border-dark mx-2 shadow"
           onClick={() => setDate(today())}
         >
           Today
         </button>
         <button
-          className="btn btn-primary border border-dark m-1"
+          className="btn-lg btn-primary border border-dark mx-2 shadow"
           onClick={() => setDate(next(date))}
         >
           Next
