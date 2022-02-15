@@ -22,9 +22,9 @@ async function create(req, res) {
 
 function checkReservationDate(req, res, next) {
   const {
-    data: { reservation_date },
+    data: { reservation_date, reservation_time },
   } = req.body;
-  const dateToCheck = new Date(reservation_date);
+  const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
   const today = new Date();
 
   if (dateToCheck.getUTCDay() === 2) {
