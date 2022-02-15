@@ -24,16 +24,23 @@ function checkReservationDate(req, res, next) {
   const {
     data: { reservation_date },
   } = req.body;
-  const dateToCheck = new Date(`${reservation_date}`);
+  const dateToCheck = new Date(reservation_date);
   const today = new Date();
 
-  if (dateToCheck < today) {
-    next({
-      status: 404,
-      message: "You cannot make reservations for a date in the past.",
+  if (dateToCheck.getUTCDay() === 1) {
+    return next({
+      status: 400,
+      message: `The restaurant is closed on Tuesday. ${reservation_date} is on a Tuesday`,
     });
   }
 
+  if (dateToCheck < today) {
+    return next({
+      status: 400,
+      message: "You cannot make reservations for a date in the past.",
+    });
+  }
+  console.log(dateToCheck.getUTCDay());
   next();
 }
 

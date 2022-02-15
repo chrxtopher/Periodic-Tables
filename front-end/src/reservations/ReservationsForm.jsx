@@ -22,8 +22,7 @@ function ReservationForm() {
  /////////////////////
 
  const handleChange = (event) => {
-   setNewReservation({...newReservation, [event.target.name]: event.target.value})
-   console.log(newReservation);
+   setNewReservation({...newReservation, [event.target.name]: event.target.value});
  }
  
  const handleSubmit = async (event) => {
