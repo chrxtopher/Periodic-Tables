@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import { createTable } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert";
+import { useHistory } from "react-router-dom";
 
-const handleSubmit = (event) => {
-  event.preventDefault();
+const emptyTableForm = {
+  "table_name": "",
+  "capacity": ""
 }
 
+
+
 function CreateTable() {
+  const history = useHistory();
+  const [newTable, setNewTable] = useState({});
+  const [error, setError] = useState("");
+
+  const handleChange = (event) => {
+    setNewTable({...newTable, [event.target.name]:event.target.value});
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    history.push("/");
+    try {
+      await createTable(newTable, abortController.signal);
+      setNewTable({...emptyTableForm});
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+
   return (
     <>
     <h1 className="display-4 text-center mt-3">New Table</h1>
+    <ErrorAlert error={error}/>
     <form onSubmit={handleSubmit} className="m-5" >
       <div className="row">
         <div className="col mb-3">
@@ -15,6 +43,7 @@ function CreateTable() {
             Table Name
           </label>
           <input
+            onChange={handleChange}
             name="table_name"
             className="form-control shadow"
             type="text"
@@ -26,7 +55,8 @@ function CreateTable() {
           <label className="ml-2 mb-1" htmlFor="capacity">
             Capacity
           </label>
-          <input 
+          <input
+            onChange={handleChange}
             name="capacity"
             className="form-control shadow" 
             type="number" 
