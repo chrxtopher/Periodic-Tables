@@ -7,7 +7,7 @@ const handleSubmit = (event) => {
 function CreateTable() {
   return (
     <>
-    <h1 className="display-4 text-center">New Table</h1>
+    <h1 className="display-4 text-center mt-3">New Table</h1>
     <form onSubmit={handleSubmit} className="m-5" >
       <div className="row">
         <div className="col mb-3">
@@ -36,9 +36,9 @@ function CreateTable() {
           />
         </div>
       </div>
-      <div className="d-flex justify-content-center">
-      <a className="btn btn-lg btn-danger border border-dark mr-2 mt-5" href="/">Cancel</a>
-      <button type="submit" className="btn btn-lg btn-primary border border-dark ml-2 mt-5">Submit</button>
+      <div className="d-flex justify-content-center my-5">
+      <a className="btn btn-lg btn-danger border border-dark mx-2 shadow" href="/">Cancel</a>
+      <button type="submit" className="btn btn-lg btn-primary border border-dark mx-2 shadow">Submit</button>
       </div>
     </form>
     </>
