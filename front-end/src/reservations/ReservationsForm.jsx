@@ -130,9 +130,9 @@ function ReservationForm() {
         
       </div>
       <div className="d-flex ml-3 mt-4 justify-content-center">
-        <a className="btn btn-danger btn-lg border border-dark mr-1" href="/">
+        <button className="btn btn-danger btn-lg border border-dark mr-1" onClick={() => history.goBack()}>
           Cancel
-        </a>
+        </button>
         <button
           type="submit"
           className="btn btn-primary btn-lg border border-dark ml-1"
