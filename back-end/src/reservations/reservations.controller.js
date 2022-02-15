@@ -30,8 +30,7 @@ function checkReservationDate(req, res, next) {
   if (dateToCheck < today) {
     next({
       status: 404,
-      message:
-        "You can only make reservations for today or a date in the future.",
+      message: "You cannot make reservations for a date in the past.",
     });
   }
 
