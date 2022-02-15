@@ -27,7 +27,7 @@ function checkReservationDate(req, res, next) {
   const dateToCheck = new Date(reservation_date);
   const today = new Date();
 
-  if (dateToCheck.getUTCDay() === 1) {
+  if (dateToCheck.getUTCDay() === 2) {
     return next({
       status: 400,
       message: `The restaurant is closed on Tuesday. ${reservation_date} is on a Tuesday`,
@@ -40,7 +40,6 @@ function checkReservationDate(req, res, next) {
       message: "You cannot make reservations for a date in the past.",
     });
   }
-  console.log(dateToCheck.getUTCDay());
   next();
 }
 
@@ -54,6 +53,13 @@ function checkReservationTime(req, res, next) {
       status: 400,
       message:
         "Please schedule your reservation at or after opening time. (10:30 AM)",
+    });
+  }
+
+  if (reservation_time > "21:30:00") {
+    return next({
+      status: 400,
+      message: "Please schedule your reservation before 9:30 PM.",
     });
   }
 
