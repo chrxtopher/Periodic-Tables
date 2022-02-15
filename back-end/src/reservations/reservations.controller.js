@@ -44,7 +44,23 @@ function checkReservationDate(req, res, next) {
   next();
 }
 
+function checkReservationTime(req, res, next) {
+  const {
+    data: { reservation_time },
+  } = req.body;
+
+  if (reservation_time < "10:30:00") {
+    return next({
+      status: 400,
+      message:
+        "Please schedule your reservation at or after opening time. (10:30 AM)",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list,
-  create: [checkReservationDate, create],
+  create: [checkReservationDate, checkReservationTime, create],
 };
