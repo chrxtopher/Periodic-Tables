@@ -16,7 +16,29 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+////////////////
+// VALIDATION //
+////////////////
+
+function checkReservationDate(req, res, next) {
+  const {
+    data: { reservation_date },
+  } = req.body;
+  const dateToCheck = new Date(`${reservation_date}`);
+  const today = new Date();
+
+  if (dateToCheck < today) {
+    next({
+      status: 404,
+      message:
+        "You can only make reservations for today or a date in the future.",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list,
-  create,
+  create: [checkReservationDate, create],
 };
