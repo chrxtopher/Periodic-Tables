@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
 import { useHistory } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
  
 const emptyReservationForm = {
   first_name: "",
@@ -14,6 +15,7 @@ const emptyReservationForm = {
 function ReservationForm() {
  const history = useHistory();
  const [newReservation, setNewReservation] = useState({});
+ const [error, setError] = useState(null);
  
  ////////////////////
  // HANDLERS BELOW //
@@ -29,12 +31,11 @@ function ReservationForm() {
    const abortController = new AbortController();
    try {
      await createReservation(newReservation, abortController.signal);
-     setNewReservation({...emptyReservationForm})
-     history.push("/");
+     setNewReservation({...emptyReservationForm});
+     history.push(`/dashboard?date=${newReservation.reservation_date}`);
    } catch (error) {
-     console.log(error);
+     setError(error);
    }
-   console.log("Submitted!");
    return () => abortController.abort();
  };
 
@@ -43,6 +44,7 @@ function ReservationForm() {
  return (
    <>
      <h1 className="display-4 text-center mt-3">Create a Reservation</h1>
+     <ErrorAlert error={error}/>
     <form onSubmit={handleSubmit} className="m-5">
       <div>
         <div className="row">

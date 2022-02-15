@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, useLocation } from "react-router-dom";
 import { today, previous, next } from "../utils/date-time";
+import ReservationsList from "../reservations/ReservationsList";
 
 /**
  * Defines the dashboard page.
@@ -34,36 +35,7 @@ function Dashboard() {
     return () => abortController.abort();
   }
 
-  const reservationsList = reservations.map((reservation) => {
-    return (
-      <div
-        className="card bg-light border-dark m-1 shadow-sm"
-        key={reservation.reservation_id}
-      >
-        <div className="card-body">
-          <h4 className="card-title text-center">
-            {reservation.first_name} {reservation.last_name} : Party of{" "}
-            {reservation.people}
-          </h4>
-          <p className="card-text text-center">
-            <strong>Contact:</strong> {reservation.mobile_number}
-          </p>
-          <p className="card-text text-center">
-            <strong>Date:</strong> {reservation.reservation_date}
-          </p>
-          <p className="card-text text-center">
-            <strong>Time:</strong> {reservation.reservation_time}
-          </p>
-        </div>
-        <a
-          className="btn btn-success border border-dark"
-          href={`/reservations/${reservation.reservation_id}/seat`}
-        >
-          Seat
-        </a>
-      </div>
-    );
-  });
+  const reservationsList = ReservationsList(reservations);
 
   return (
     <main>
