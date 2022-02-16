@@ -13,7 +13,7 @@ const emptyTableForm = {
 function CreateTable() {
   const history = useHistory();
   const [newTable, setNewTable] = useState({});
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
     setNewTable({...newTable, [event.target.name]:event.target.value});
