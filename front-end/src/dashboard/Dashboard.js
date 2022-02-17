@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, useLocation } from "react-router-dom";
 import { today, previous, next } from "../utils/date-time";
 import ReservationsList from "../reservations/ReservationsList";
+import TablesList from "../tables/TablesList";
 
 /**
  * Defines the dashboard page.
@@ -18,10 +19,14 @@ function Dashboard() {
   const query = useQuery();
   const history = useHistory();
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tablesError, setTablesError] = useState(null);
   const [date, setDate] = useState(query.get("date") || today());
 
   useEffect(loadDashboard, [date]);
+  useEffect(loadTables, []);
+
   useEffect(() => {
     history.push(`/dashboard?date=${date}`);
   }, [date, history]);
@@ -35,11 +40,18 @@ function Dashboard() {
     return () => abortController.abort();
   }
 
+  function loadTables() {
+    const abortController = new AbortController();
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
+
+    return () => abortController.abort();
+  }
+
   const reservationsList = ReservationsList(reservations);
 
   return (
     <main>
-      <h1 className="display-4 text-center mt-3">Dashboard</h1>
+      <h1 className="display-4 text-center mt-3 mb-5">Dashboard</h1>
       <h3 className="text-center">Reservations for date: {date}</h3>
 
       <div className="d-flex justify-content-center my-4">
@@ -63,9 +75,14 @@ function Dashboard() {
         </button>
       </div>
       <ErrorAlert error={reservationsError} />
-      <div className="d-flex flex-wrap justify-content-center">
+      <section className="d-flex flex-wrap justify-content-center">
         {reservationsList}
-      </div>
+      </section>
+      <h3 className="text-center my-4">Tables</h3>
+      <ErrorAlert error={tablesError} />
+      <section className="d-flex flex-wrap justify-content-center">
+        <TablesList tables={tables} reservations={reservations} />
+      </section>
     </main>
   );
 }
