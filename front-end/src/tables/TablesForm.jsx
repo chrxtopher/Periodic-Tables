@@ -67,7 +67,7 @@ function CreateTable() {
         </div>
       </div>
       <div className="d-flex justify-content-center my-5">
-      <a className="btn btn-lg btn-danger border border-dark mx-2 shadow" href="/">Cancel</a>
+      <button onClick={() => history.goBack()} className="btn btn-lg btn-danger border border-dark mx-2 shadow">Cancel</button>
       <button type="submit" className="btn btn-lg btn-primary border border-dark mx-2 shadow">Submit</button>
       </div>
     </form>
