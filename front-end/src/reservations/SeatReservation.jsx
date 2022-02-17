@@ -17,27 +17,35 @@ function SeatReservation() {
 
   const options = tables.map((table) => {
     return (
-      <option>Table: {table.table_name} - Capacity: {table.capacity}</option>
+      <option key={table.table_id}>Table: {table.table_name} - Capacity: {table.capacity}</option>
     )
   });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  }
 
   return (
     <>
       <h1 className="display-4 text-center mt-3 mb-5">Seat a Reservation</h1>
-      <div>
-        <form>
+      <div className="d-flex justify-content-center">
+        <form onSubmit={handleSubmit}>
           <label>Table number</label>
-          <select className="form-select">
-            <option selected>Select a table</option>
+          <select required name="table_id" className="form-select">
+            <option value={"Select a Table"} key={0}>Select a table</option>
             {options}
           </select>
-          <div>
+          <div className="d-flex justify-content-center my-5">
             <button 
               onClick={() => history.goBack()} 
               className="btn btn-lg btn-danger border border-dark mx-2 shadow">
                 Cancel
             </button>
-            <button>Submit</button>
+            <button 
+              type="submit" 
+              className="btn btn-lg btn-primary border border-dark mx-2 shadow">
+                Submit
+            </button>
           </div>
         </form>
       </div>
