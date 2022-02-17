@@ -81,7 +81,7 @@ function Dashboard() {
       <h3 className="text-center my-4">Tables</h3>
       <ErrorAlert error={tablesError} />
       <section className="d-flex flex-wrap justify-content-center">
-        <TablesList tables={tables} />
+        <TablesList tables={tables} reservations={reservations} />
       </section>
     </main>
   );
