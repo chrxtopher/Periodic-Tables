@@ -10,7 +10,15 @@ async function create(req, res, next) {
   res.status(201).json({ data });
 }
 
+async function update(req, res, next) {
+  const table_id = Number(req.params.table_id);
+  const { reservation_id } = req.body.data;
+  const data = await tablesService.update(table_id, reservation_id);
+  res.json({ data });
+}
+
 module.exports = {
   list,
   create,
+  update,
 };
