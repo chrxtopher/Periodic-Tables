@@ -27,6 +27,19 @@ async function update(req, res, next) {
 // VALIDATION //
 ////////////////
 
+function checkTableName(req, res, next) {
+  const data = req.body.data;
+  const check = data.table_name.split("");
+  if (check.length < 2) {
+    console.log("Table name must be at least 2 characters long.");
+    return next({
+      status: 400,
+      message: "Table name must be at least 2 characters long.",
+    });
+  }
+  next();
+}
+
 async function tableExists(req, res, next) {
   const table_id = Number(req.params.table_id);
   const table = await tablesService.read(table_id);
@@ -72,9 +85,27 @@ async function checkTableCapacity(req, res, next) {
   next();
 }
 
+async function checkIfTableIsOccupied(req, res, next) {
+  const table = res.locals.table;
+  if (table.reservation_id) {
+    return next({
+      status: 400,
+      message: "This table is currently occupied.",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list,
-  create,
+  create: [checkTableName, create],
   read: [tableExists, read],
-  update: [reservationExists, tableExists, checkTableCapacity, update],
+  update: [
+    reservationExists,
+    tableExists,
+    checkIfTableIsOccupied,
+    checkTableCapacity,
+    update,
+  ],
 };
