@@ -16,9 +16,29 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function read(req, res, next) {
+  const data = res.locals.reservation;
+  res.json({ data });
+}
+
 ////////////////
 // VALIDATION //
 ////////////////
+
+async function reservationExists(req, res, next) {
+  const reservation_id = Number(req.params.reservation_id);
+  const reservation = await reservationsService.read(reservation_id);
+
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    return next({
+      status: 404,
+      message: `Reservation ${reservation_id} does not exist.`,
+    });
+  }
+}
 
 function checkReservationDate(req, res, next) {
   const {
@@ -69,4 +89,5 @@ function checkReservationTime(req, res, next) {
 module.exports = {
   list,
   create: [checkReservationDate, checkReservationTime, create],
+  read: [reservationExists, read],
 };
