@@ -3,17 +3,14 @@ import { createTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory } from "react-router-dom";
 
-const emptyTableForm = {
-  "table_name": "",
-  "capacity": ""
-}
-
-
-
 function CreateTable() {
   const history = useHistory();
   const [newTable, setNewTable] = useState({});
   const [error, setError] = useState(null);
+  const emptyTableForm = {
+  "table_name": "",
+  "capacity": ""
+  }
 
   const handleChange = (event) => {
     setNewTable({...newTable, [event.target.name]:event.target.value});
