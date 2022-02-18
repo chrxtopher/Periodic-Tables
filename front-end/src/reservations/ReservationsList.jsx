@@ -1,11 +1,10 @@
 import React from "react";
+import NoReservations from "./NoReservations";
 
 function ReservationsList({ reservations = [], noDisplayMessage, display = false }) {
   if (display === true) {
       if (reservations.length === 0) {
-      return (
-        <h4>{noDisplayMessage}</h4>
-      )
+      return <NoReservations />
     } else {
         return reservations.map((reservation) => {
         return (
