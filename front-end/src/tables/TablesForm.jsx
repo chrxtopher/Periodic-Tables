@@ -22,10 +22,10 @@ function CreateTable() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-    history.push("/");
     try {
       await createTable(newTable, abortController.signal);
       setNewTable({...emptyTableForm});
+      history.push("/");
     } catch (error) {
       setError(error);
     }
