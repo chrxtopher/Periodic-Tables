@@ -2,9 +2,15 @@ const reservationsService = require("./reservations.service");
 
 async function list(req, res) {
   const { date } = req.query;
-  const data = date
-    ? await reservationsService.listByDate(date)
-    : await reservationsService.list();
+  const { mobile_number } = req.query;
+  let data;
+  if (date) {
+    data = await reservationsService.listByDate(date);
+  } else if (mobile_number) {
+    data = await reservationsService.search(mobile_number);
+  } else {
+    data = await reservationsService.list();
+  }
   res.json({ data });
 }
 
@@ -26,7 +32,6 @@ function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
   } = req.body;
-  // "a100.dfwe".replace(/\D/g, "")
   const fixed = mobile_number.replace(/\D/g, "");
   if (fixed.length !== 10) {
     return next({
