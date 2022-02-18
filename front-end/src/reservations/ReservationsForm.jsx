@@ -128,7 +128,6 @@ function ReservationForm() {
             />
           </div>
         </div>
-        
       </div>
       <div className="d-flex my-4 justify-content-center">
         <button className="btn btn-danger btn-lg border border-dark mx-2 shadow" onClick={() => history.goBack()}>
