@@ -46,7 +46,7 @@ function ReservationForm() {
      <ErrorAlert error={error}/>
     <form onSubmit={handleSubmit} className="m-5">
       <div>
-        <div className="row">
+        <div className="row mb-3">
           <div className="col mb-3">
             <label className="ml-2 mb-1" htmlFor="firstName">
               First Name
@@ -74,7 +74,7 @@ function ReservationForm() {
             />
           </div>
         </div>
-        <div className="row">
+        <div className="row mb-3">
           <div className="col mb-3">
             <label className="ml-2 mb-1" htmlFor="mobileNumber">
               Mobile Number
@@ -89,19 +89,19 @@ function ReservationForm() {
             />
           </div>
           <div className="col mb-3">
-          <label className="ml-2" htmlFor="partySize">Party Size</label>
-          <input 
-            name="people"
-            className="form-control shadow" 
-            type="number" 
-            min={1} 
-            placeholder="1" 
-            onChange={handleChange} 
-            required 
-          />
+            <label className="ml-2" htmlFor="partySize">Party Size</label>
+            <input 
+              name="people"
+              className="form-control shadow" 
+              type="number" 
+              min={1} 
+              placeholder="1" 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
         </div>
-        </div>
-        <div className="row">
+        <div className="row mb-3">
           <div className="col mb-3">
             <label className="ml-2" htmlFor="reservationDate">
               Date of Reservation
@@ -113,7 +113,7 @@ function ReservationForm() {
               onChange={handleChange} 
               required
             />
-            <small className="ml-2">Closed on Tuesday</small>
+            <small className="m-2">Closed on Tuesday</small>
           </div>
           <div className="col mb-3">
             <label className="ml-2" htmlFor="reservationTime">
@@ -126,9 +126,9 @@ function ReservationForm() {
               onChange={handleChange} 
               required
             />
+            <small className="m-2">Between 10:30 AM - 9:30 PM</small>
           </div>
         </div>
-        
       </div>
       <div className="d-flex my-4 justify-content-center">
         <button className="btn btn-danger btn-lg border border-dark mx-2 shadow" onClick={() => history.goBack()}>

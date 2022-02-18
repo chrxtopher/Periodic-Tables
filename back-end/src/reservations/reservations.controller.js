@@ -1,13 +1,16 @@
-/**
- * List handler for reservation resources
- */
 const reservationsService = require("./reservations.service");
 
 async function list(req, res) {
   const { date } = req.query;
-  const data = date
-    ? await reservationsService.listByDate(date)
-    : await reservationsService.list();
+  const { mobile_number } = req.query;
+  let data;
+  if (date) {
+    data = await reservationsService.listByDate(date);
+  } else if (mobile_number) {
+    data = await reservationsService.search(mobile_number);
+  } else {
+    data = await reservationsService.list();
+  }
   res.json({ data });
 }
 
@@ -24,6 +27,20 @@ async function read(req, res, next) {
 ////////////////
 // VALIDATION //
 ////////////////
+
+function checkMobileNumber(req, res, next) {
+  const {
+    data: { mobile_number },
+  } = req.body;
+  const fixed = mobile_number.replace(/\D/g, "");
+  if (fixed.length !== 10) {
+    return next({
+      status: 400,
+      message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
+    });
+  }
+  next();
+}
 
 async function reservationExists(req, res, next) {
   const reservation_id = Number(req.params.reservation_id);
@@ -88,6 +105,11 @@ function checkReservationTime(req, res, next) {
 
 module.exports = {
   list,
-  create: [checkReservationDate, checkReservationTime, create],
+  create: [
+    checkMobileNumber,
+    checkReservationDate,
+    checkReservationTime,
+    create,
+  ],
   read: [reservationExists, read],
 };
