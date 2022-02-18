@@ -19,12 +19,17 @@ function SearchReservations() {
     const abortController = new AbortController();
     setSearchNumber(searchNumber.replace(/\D/g, ""))
     try {
-      const data = await listReservations({ mobile_number: searchNumber }, abortController.signal);
-      setReservations(data);
+      if (searchNumber === "") {
+        setDisplay(false);
+        throw new Error("Please enter part a valid mobile number. ( ex: 123-456-7890 )");
+      } else {
+        const data = await listReservations({ mobile_number: searchNumber }, abortController.signal);
+        setReservations(data);
+        setDisplay(true);
+      }
     } catch (error) {
       setError(error);
     }
-    setDisplay(true);
   }
 
   return (
