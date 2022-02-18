@@ -44,11 +44,37 @@ async function tableExists(req, res, next) {
 
 async function reservationExists(req, res, next) {
   const { reservation_id } = req.body.data;
+  const reservation = await reservationsService.read(reservation_id);
+
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    return next({
+      status: 404,
+      message: `Reservation ${reservation_id} does not exist.`,
+    });
+  }
+}
+
+async function checkTableCapacity(req, res, next) {
+  const table = res.locals.table;
+  const reservation = res.locals.reservation;
+
+  if (reservation.people > table.capacity) {
+    return next({
+      status: 400,
+      message:
+        "This table cannot seat that many people, please select another table.",
+    });
+  }
+
+  next();
 }
 
 module.exports = {
   list,
   create,
   read: [tableExists, read],
-  update,
+  update: [reservationExists, tableExists, checkTableCapacity, update],
 };
