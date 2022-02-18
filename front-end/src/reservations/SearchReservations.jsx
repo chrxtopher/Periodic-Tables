@@ -17,6 +17,7 @@ function SearchReservations() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
+    setSearchNumber(searchNumber.replace(/\D/g, ""))
     try {
       const data = await listReservations({ mobile_number: searchNumber }, abortController.signal);
       setReservations(data);
