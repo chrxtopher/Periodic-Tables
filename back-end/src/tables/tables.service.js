@@ -1,4 +1,3 @@
-const { where } = require("../db/connection");
 const knex = require("../db/connection");
 
 function list() {
@@ -12,7 +11,7 @@ function create(table) {
     .then((createdRecords) => createdRecords[0]);
 }
 
-function update(table_id, reservation_id) {
+function update(reservation_id, table_id) {
   return knex("tables")
     .where({ table_id })
     .update({ reservation_id })

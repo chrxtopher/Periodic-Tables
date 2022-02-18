@@ -13,7 +13,7 @@ async function create(req, res, next) {
 async function update(req, res, next) {
   const table_id = Number(req.params.table_id);
   const { reservation_id } = req.body.data;
-  const data = await tablesService.update(table_id, reservation_id);
+  const data = await tablesService.update(reservation_id, table_id);
   res.json({ data });
 }
 
