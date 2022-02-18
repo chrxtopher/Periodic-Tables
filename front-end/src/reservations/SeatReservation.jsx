@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { listTables } from "../utils/api";
 import { useHistory } from "react-router";
+import { seatReservation } from "../utils/api";
 
 function SeatReservation() {
   const history = useHistory();
   const [tables, setTables] = useState([]);
+  const [table, setTable] = useState(null);
   
   useEffect(() => {
     async function loadTables() {
@@ -17,12 +19,17 @@ function SeatReservation() {
 
   const options = tables.map((table) => {
     return (
-      <option key={table.table_id}>Table: {table.table_name} - Capacity: {table.capacity}</option>
+      <option value={table.table_id} key={table.table_id}>Table: {table.table_name} - Capacity: {table.capacity}</option>
     )
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(table);
+  }
+
+  const handleChange = (event) => {
+    setTable({ [event.target.name]: event.target.value })
   }
 
   return (
@@ -31,7 +38,7 @@ function SeatReservation() {
       <div className="d-flex justify-content-center">
         <form onSubmit={handleSubmit}>
           <label>Table number</label>
-          <select required name="table_id" className="form-select">
+          <select required onChange={handleChange} name="table_id" className="form-select">
             <option value={"Select a Table"} key={0}>Select a table</option>
             {options}
           </select>
