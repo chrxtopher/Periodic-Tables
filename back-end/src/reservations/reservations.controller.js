@@ -36,25 +36,63 @@ function checkForData(req, res, next) {
       message: "All data fields are required.",
     });
   }
+  next();
+}
+
+function checkFirstName(req, res, next) {
+  const {
+    data: { first_name },
+  } = req.body;
+
+  if (!first_name) {
+    return next({
+      status: 400,
+      message: "A first_name is required.",
+    });
+  }
+
+  if (first_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "First name cannot be blank.",
+    });
+  }
+
+  next();
 }
 
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
   } = req.body;
+
   if (!mobile_number) {
     return next({
       status: 400,
-      message: "A mobile number is required.",
+      message: "A mobile_number is required.",
     });
-  } else {
-    const fixed = mobile_number.replace(/\D\s+/g, "");
-    if (fixed.length !== 10) {
-      return next({
-        status: 400,
-        message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
-      });
-    }
+  }
+
+  if (mobile_number.replace(/\s+/g, "") === "") {
+    return next({
+      status: 404,
+      message: "Mobile number cannot be blank.",
+    });
+  }
+
+  if (/[a-zA-Z,.]/.test(mobile_number) === true) {
+    return next({
+      status: 400,
+      message: "Mobile number can only include numbers. ( ex: 123-456-7890 )",
+    });
+  }
+
+  const fixed = mobile_number.replace(/\D/g, "");
+  if (fixed.length !== 10) {
+    return next({
+      status: 400,
+      message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
+    });
   }
 
   next();
@@ -125,6 +163,7 @@ module.exports = {
   list,
   create: [
     checkForData,
+    checkFirstName,
     checkMobileNumber,
     checkReservationDate,
     checkReservationTime,
