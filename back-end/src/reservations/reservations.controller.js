@@ -28,17 +28,35 @@ async function read(req, res, next) {
 // VALIDATION //
 ////////////////
 
+function checkForData(req, res, next) {
+  const { data } = req.body;
+  if (!data) {
+    return next({
+      status: 400,
+      message: "All data fields are required.",
+    });
+  }
+}
+
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
   } = req.body;
-  const fixed = mobile_number.replace(/\D/g, "");
-  if (fixed.length !== 10) {
+  if (!mobile_number) {
     return next({
       status: 400,
-      message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
+      message: "A mobile number is required.",
     });
+  } else {
+    const fixed = mobile_number.replace(/\D\s+/g, "");
+    if (fixed.length !== 10) {
+      return next({
+        status: 400,
+        message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
+      });
+    }
   }
+
   next();
 }
 
@@ -106,6 +124,7 @@ function checkReservationTime(req, res, next) {
 module.exports = {
   list,
   create: [
+    checkForData,
     checkMobileNumber,
     checkReservationDate,
     checkReservationTime,
