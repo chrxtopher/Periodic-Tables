@@ -27,16 +27,66 @@ async function update(req, res, next) {
 // VALIDATION //
 ////////////////
 
-function checkTableName(req, res, next) {
-  const data = req.body.data;
-  const check = data.table_name.split("");
-  if (check.length < 2) {
-    console.log("Table name must be at least 2 characters long.");
+function checkData(req, res, next) {
+  const { data } = req.body;
+  if (!data) {
     return next({
       status: 400,
-      message: "Table name must be at least 2 characters long.",
+      message: "A data key is required in the request body.",
     });
   }
+
+  next();
+}
+
+function checkTableName(req, res, next) {
+  const {
+    data: { table_name },
+  } = req.body;
+
+  if (!table_name) {
+    return next({
+      status: 400,
+      message: "A table_name is required.",
+    });
+  }
+
+  if (table_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Table name cannot be blank.",
+    });
+  }
+
+  if (table_name.length < 2) {
+    return next({
+      status: 400,
+      message: "table_name must be at least 2 characters long.",
+    });
+  }
+  next();
+}
+
+function checkTableCapacityPOST(req, res, next) {
+  // checks capacity value when creating a new table
+  const {
+    data: { capacity },
+  } = req.body;
+
+  if (!capacity || capacity < 0) {
+    return next({
+      status: 400,
+      message: "A capacity greater than zero is required.",
+    });
+  }
+
+  if (typeof capacity !== "number") {
+    return next({
+      status: 400,
+      message: "capacity must be a number.",
+    });
+  }
+
   next();
 }
 
@@ -56,7 +106,17 @@ async function tableExists(req, res, next) {
 }
 
 async function reservationExists(req, res, next) {
-  const { reservation_id } = req.body.data;
+  const {
+    data: { reservation_id },
+  } = req.body;
+
+  if (!reservation_id) {
+    return next({
+      status: 400,
+      message: "reservation_id is required.",
+    });
+  }
+
   const reservation = await reservationsService.read(reservation_id);
 
   if (reservation) {
@@ -70,7 +130,8 @@ async function reservationExists(req, res, next) {
   }
 }
 
-async function checkTableCapacity(req, res, next) {
+async function checkTableCapacityPUT(req, res, next) {
+  // checks the table capacity when updating an existing table
   const table = res.locals.table;
   const reservation = res.locals.reservation;
 
@@ -78,7 +139,7 @@ async function checkTableCapacity(req, res, next) {
     return next({
       status: 400,
       message:
-        "This table cannot seat that many people, please select another table.",
+        "This table's capacity is not large enough for that reservation.",
     });
   }
 
@@ -99,13 +160,14 @@ async function checkIfTableIsOccupied(req, res, next) {
 
 module.exports = {
   list,
-  create: [checkTableName, create],
+  create: [checkData, checkTableName, checkTableCapacityPOST, create],
   read: [tableExists, read],
   update: [
+    checkData,
     reservationExists,
     tableExists,
     checkIfTableIsOccupied,
-    checkTableCapacity,
+    checkTableCapacityPUT,
     update,
   ],
 };
