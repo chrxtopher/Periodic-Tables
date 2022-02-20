@@ -173,28 +173,6 @@ function checkReservationDate(req, res, next) {
   next();
 }
 
-// function checkFirstName(req, res, next) {
-//   const {
-//     data: { first_name },
-//   } = req.body;
-
-//   if (!first_name) {
-//     return next({
-//       status: 400,
-//       message: "A first_name is required.",
-//     });
-//   }
-
-//   if (first_name.replace(/\s+/g, "") === "") {
-//     return next({
-//       status: 400,
-//       message: "First name cannot be blank.",
-//     });
-//   }
-
-//   next();
-// }
-
 function checkReservationTime(req, res, next) {
   const {
     data: { reservation_time },
