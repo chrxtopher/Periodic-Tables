@@ -61,6 +61,28 @@ function checkFirstName(req, res, next) {
   next();
 }
 
+function checkLastName(req, res, next) {
+  const {
+    data: { last_name },
+  } = req.body;
+
+  if (!last_name) {
+    return next({
+      status: 400,
+      message: "A last_name is required.",
+    });
+  }
+
+  if (last_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Last name cannot be blank.",
+    });
+  }
+
+  next();
+}
+
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
@@ -164,6 +186,7 @@ module.exports = {
   create: [
     checkForData,
     checkFirstName,
+    checkLastName,
     checkMobileNumber,
     checkReservationDate,
     checkReservationTime,
