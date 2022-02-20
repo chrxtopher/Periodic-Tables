@@ -67,7 +67,7 @@ function checkTableName(req, res, next) {
   next();
 }
 
-function checkTableCapacityPOST(res, res, next) {
+function checkTableCapacityPOST(req, res, next) {
   // checks capacity value when creating a new table
   const {
     data: { capacity },
