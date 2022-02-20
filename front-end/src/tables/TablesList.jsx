@@ -1,16 +1,9 @@
 import React from "react";
+import { finishTable } from "../utils/api";
+import { useHistory } from "react-router-dom";
 
 function TablesList({ tables, reservations }) {
-  const handleFinish = () => {
-    if (
-      window.confirm(
-        "Is this table ready to seat new guests? This cannot be undone."
-      )
-    ) {
-      ///
-    }
-  };
-
+  const history = useHistory();
   return tables.map((table) => {
     const reservation = table.reservation_id
       ? reservations.find((reservation) => {
@@ -25,6 +18,17 @@ function TablesList({ tables, reservations }) {
     ) : (
       "Free"
     );
+
+    const handleFinish = async () => {
+      if (
+        window.confirm(
+          "Is this table ready to seat new guests? This cannot be undone."
+        )
+      ) {
+        await finishTable(table.table_id);
+        history.go();
+      }
+    };
 
     const finishButton = table.reservation_id ? (
       <button
