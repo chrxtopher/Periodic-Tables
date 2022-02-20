@@ -27,14 +27,39 @@ async function update(req, res, next) {
 // VALIDATION //
 ////////////////
 
-function checkTableName(req, res, next) {
-  const data = req.body.data;
-  const check = data.table_name.split("");
-  if (check.length < 2) {
-    console.log("Table name must be at least 2 characters long.");
+function checkData(req, res, next) {
+  const { data } = req.body;
+  if (!data) {
     return next({
       status: 400,
-      message: "Table name must be at least 2 characters long.",
+      message: "A data key is required in the request body.",
+    });
+  }
+}
+
+function checkTableName(req, res, next) {
+  const {
+    data: { table_name },
+  } = req.body;
+
+  if (!table_name) {
+    return next({
+      status: 400,
+      message: "A table_name is required.",
+    });
+  }
+
+  if (table_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Table name cannot be blank.",
+    });
+  }
+
+  if (table_name.length < 2) {
+    return next({
+      status: 400,
+      message: "table_name must be at least 2 characters long.",
     });
   }
   next();
@@ -56,7 +81,17 @@ async function tableExists(req, res, next) {
 }
 
 async function reservationExists(req, res, next) {
-  const { reservation_id } = req.body.data;
+  const {
+    data: { reservation_id },
+  } = req.body;
+
+  if (!reservation_id) {
+    return next({
+      status: 400,
+      message: "reservation_id is required.",
+    });
+  }
+
   const reservation = await reservationsService.read(reservation_id);
 
   if (reservation) {
@@ -78,7 +113,7 @@ async function checkTableCapacity(req, res, next) {
     return next({
       status: 400,
       message:
-        "This table cannot seat that many people, please select another table.",
+        "This table's capacity is not large enough for that reservation.",
     });
   }
 
@@ -99,9 +134,10 @@ async function checkIfTableIsOccupied(req, res, next) {
 
 module.exports = {
   list,
-  create: [checkTableName, create],
+  create: [checkData, checkTableName, create],
   read: [tableExists, read],
   update: [
+    checkData,
     reservationExists,
     tableExists,
     checkIfTableIsOccupied,
