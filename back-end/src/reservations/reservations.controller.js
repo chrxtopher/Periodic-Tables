@@ -139,6 +139,21 @@ function checkReservationDate(req, res, next) {
   const {
     data: { reservation_date, reservation_time },
   } = req.body;
+
+  if (!reservation_date) {
+    return next({
+      status: 400,
+      message: "A reservation_date is required.",
+    });
+  }
+
+  if (reservation_date.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Reservation date cannot be blank.",
+    });
+  }
+
   const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
   const today = new Date();
 
