@@ -1,10 +1,18 @@
 import React from "react";
 
 function TablesList({ tables, reservations }) {
+  const handleFinish = () => {
+    if (window.confirm("test message")) {
+      console.log("Finishing this seat!");
+    }
+  };
+
   return tables.map((table) => {
-    const reservation = reservations.find((reservation) => {
-      return reservation.reservation_id === table.reservation_id;
-    });
+    const reservation = table.reservation_id
+      ? reservations.find((reservation) => {
+          return reservation.reservation_id === table.reservation_id;
+        })
+      : null;
 
     const status = reservation ? (
       <strong>
@@ -13,6 +21,16 @@ function TablesList({ tables, reservations }) {
     ) : (
       "Free"
     );
+
+    const finishButton = table.reservation_id ? (
+      <button
+        onClick={handleFinish}
+        data-table-id-finish={table.table_id}
+        className="btn btn-primary border border-dark shadow"
+      >
+        Finish
+      </button>
+    ) : null;
 
     return (
       <div
@@ -27,6 +45,7 @@ function TablesList({ tables, reservations }) {
           <p className="text-center" data-table-id-status={`${table.table_id}`}>
             {status}
           </p>
+          <div className="d-flex justify-content-center">{finishButton}</div>
         </div>
       </div>
     );
