@@ -28,10 +28,87 @@ async function read(req, res, next) {
 // VALIDATION //
 ////////////////
 
+function checkForData(req, res, next) {
+  const { data } = req.body;
+  if (!data) {
+    return next({
+      status: 400,
+      message: "All data fields are required.",
+    });
+  }
+  next();
+}
+
+function checkFirstName(req, res, next) {
+  const {
+    data: { first_name },
+  } = req.body;
+
+  if (!first_name) {
+    return next({
+      status: 400,
+      message: "A first_name is required.",
+    });
+  }
+
+  if (first_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "First name cannot be blank.",
+    });
+  }
+
+  next();
+}
+
+function checkLastName(req, res, next) {
+  const {
+    data: { last_name },
+  } = req.body;
+
+  if (!last_name) {
+    return next({
+      status: 400,
+      message: "A last_name is required.",
+    });
+  }
+
+  if (last_name.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Last name cannot be blank.",
+    });
+  }
+
+  next();
+}
+
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
   } = req.body;
+
+  if (!mobile_number) {
+    return next({
+      status: 400,
+      message: "A mobile_number is required.",
+    });
+  }
+
+  if (mobile_number.replace(/\s+/g, "") === "") {
+    return next({
+      status: 404,
+      message: "Mobile number cannot be blank.",
+    });
+  }
+
+  if (/[a-zA-Z,.]/.test(mobile_number) === true) {
+    return next({
+      status: 400,
+      message: "Mobile number can only include numbers. ( ex: 123-456-7890 )",
+    });
+  }
+
   const fixed = mobile_number.replace(/\D/g, "");
   if (fixed.length !== 10) {
     return next({
@@ -39,6 +116,7 @@ function checkMobileNumber(req, res, next) {
       message: "Please enter a valid mobile number. ( ex: 123-456-7890 )",
     });
   }
+
   next();
 }
 
@@ -63,6 +141,28 @@ function checkReservationDate(req, res, next) {
   } = req.body;
   const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
   const today = new Date();
+  const requiredFormat = /\d\d\d\d-\d\d-\d\d/;
+
+  if (!reservation_date) {
+    return next({
+      status: 400,
+      message: "A reservation_date is required.",
+    });
+  }
+
+  if (reservation_date.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Reservation date cannot be blank.",
+    });
+  }
+
+  if (!reservation_date.match(requiredFormat)) {
+    return next({
+      status: 400,
+      message: "reservation_date must be in this format: 'YYYY-MM-DD'",
+    });
+  }
 
   if (dateToCheck.getUTCDay() === 2) {
     return next({
@@ -74,7 +174,8 @@ function checkReservationDate(req, res, next) {
   if (dateToCheck < today) {
     return next({
       status: 400,
-      message: "You cannot make reservations for a date in the past.",
+      message:
+        "Please schedule your reservation for a date and time in the future.",
     });
   }
   next();
@@ -84,6 +185,28 @@ function checkReservationTime(req, res, next) {
   const {
     data: { reservation_time },
   } = req.body;
+  const requiredFormat = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
+
+  if (!reservation_time) {
+    return next({
+      status: 400,
+      message: "A reservation_time is required.",
+    });
+  }
+
+  if (reservation_time.replace(/\s+/g, "") === "") {
+    return next({
+      status: 400,
+      message: "Reservation time cannot be blank.",
+    });
+  }
+
+  if (!reservation_time.match(requiredFormat)) {
+    return next({
+      status: 400,
+      message: "reservation_time must have the required format. ( ex: 12:30 )",
+    });
+  }
 
   if (reservation_time < "10:30:00") {
     return next({
@@ -103,12 +226,45 @@ function checkReservationTime(req, res, next) {
   next();
 }
 
+function checkPeople(req, res, next) {
+  const {
+    data: { people },
+  } = req.body;
+
+  if (!people) {
+    return next({
+      status: 400,
+      message: "Please let us know how many people will be in your party.",
+    });
+  }
+
+  if (people === 0 || people <= 0) {
+    return next({
+      status: 400,
+      message: "Minimum of one person per reservation.",
+    });
+  }
+
+  if (typeof people !== "number") {
+    return next({
+      status: 400,
+      message: "Only include numbers for the amount of people in your party.",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list,
   create: [
+    checkForData,
+    checkFirstName,
+    checkLastName,
     checkMobileNumber,
     checkReservationDate,
     checkReservationTime,
+    checkPeople,
     create,
   ],
   read: [reservationExists, read],
