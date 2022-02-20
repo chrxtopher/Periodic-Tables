@@ -76,7 +76,7 @@ function checkTableCapacityPOST(req, res, next) {
   if (!capacity || capacity < 0) {
     return next({
       status: 400,
-      message: "A capaciy greater than zero is required.",
+      message: "A capacity greater than zero is required.",
     });
   }
 
