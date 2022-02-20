@@ -2,8 +2,12 @@ import React from "react";
 
 function TablesList({ tables, reservations }) {
   const handleFinish = () => {
-    if (window.confirm("test message")) {
-      console.log("Finishing this seat!");
+    if (
+      window.confirm(
+        "Is this table ready to seat new guests? This cannot be undone."
+      )
+    ) {
+      ///
     }
   };
 

@@ -6,21 +6,31 @@ async function list(req, res) {
   res.json({ data });
 }
 
-async function create(req, res, next) {
+async function create(req, res) {
   const data = await tablesService.create(req.body.data);
   res.status(201).json({ data });
 }
 
-async function read(req, res, next) {
+async function read(req, res) {
   const data = res.locals.table;
   res.json({ data });
 }
 
-async function update(req, res, next) {
+async function update(req, res) {
   const table_id = Number(req.params.table_id);
   const { reservation_id } = req.body.data;
   const data = await tablesService.update(reservation_id, table_id);
   res.json({ data });
+}
+
+async function deleteSeat(req, res) {
+  /*
+  clears the seating arrangement for a table
+  - does not delete the whole table from the database - 
+  */
+  const table_id = res.locals.table.table_id;
+  const data = await tablesService.finishTable(table_id);
+  res.status(201).json({ data });
 }
 
 ////////////////
@@ -170,4 +180,5 @@ module.exports = {
     checkTableCapacityPUT,
     update,
   ],
+  finishTable: [tableExists, deleteSeat],
 };
