@@ -245,7 +245,7 @@ function checkPeople(req, res, next) {
     });
   }
 
-  if (typeof people !== "number") {
+  if (typeof Number(people) !== "number") {
     return next({
       status: 400,
       message: "Only include numbers for the amount of people in your party.",
