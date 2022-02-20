@@ -30,7 +30,7 @@ async function deleteSeat(req, res) {
   */
   const table_id = res.locals.table.table_id;
   const data = await tablesService.finishTable(table_id);
-  res.status(201).json({ data });
+  res.status(200).json({ data });
 }
 
 ////////////////
@@ -47,6 +47,21 @@ function checkData(req, res, next) {
   }
 
   next();
+}
+
+async function tableExists(req, res, next) {
+  const table_id = Number(req.params.table_id);
+  const table = await tablesService.read(table_id);
+
+  if (table) {
+    res.locals.table = table;
+    return next();
+  } else {
+    return next({
+      status: 404,
+      message: `Table ${table_id} does not exist.`,
+    });
+  }
 }
 
 function checkTableName(req, res, next) {
@@ -100,19 +115,20 @@ function checkTableCapacityPOST(req, res, next) {
   next();
 }
 
-async function tableExists(req, res, next) {
-  const table_id = Number(req.params.table_id);
-  const table = await tablesService.read(table_id);
+function checkTableCapacityPUT(req, res, next) {
+  // checks the table capacity when updating an existing table
+  const table = res.locals.table;
+  const reservation = res.locals.reservation;
 
-  if (table) {
-    res.locals.table = table;
-    return next();
-  } else {
+  if (reservation.people > table.capacity) {
     return next({
-      status: 404,
-      message: `Table ${table_id} does not exist.`,
+      status: 400,
+      message:
+        "This table's capacity is not large enough for that reservation.",
     });
   }
+
+  next();
 }
 
 async function reservationExists(req, res, next) {
@@ -140,23 +156,7 @@ async function reservationExists(req, res, next) {
   }
 }
 
-async function checkTableCapacityPUT(req, res, next) {
-  // checks the table capacity when updating an existing table
-  const table = res.locals.table;
-  const reservation = res.locals.reservation;
-
-  if (reservation.people > table.capacity) {
-    return next({
-      status: 400,
-      message:
-        "This table's capacity is not large enough for that reservation.",
-    });
-  }
-
-  next();
-}
-
-async function checkIfTableIsOccupied(req, res, next) {
+function checkIfTableIsOccupied(req, res, next) {
   const table = res.locals.table;
   if (table.reservation_id) {
     return next({
@@ -165,6 +165,17 @@ async function checkIfTableIsOccupied(req, res, next) {
     });
   }
 
+  next();
+}
+
+function validateClearTable(req, res, next) {
+  const reservation_id = res.locals.table.reservation_id;
+  if (!reservation_id) {
+    return next({
+      status: 400,
+      message: "This table is not occupied.",
+    });
+  }
   next();
 }
 
@@ -180,5 +191,5 @@ module.exports = {
     checkTableCapacityPUT,
     update,
   ],
-  finishTable: [tableExists, deleteSeat],
+  finishTable: [tableExists, validateClearTable, deleteSeat],
 };
