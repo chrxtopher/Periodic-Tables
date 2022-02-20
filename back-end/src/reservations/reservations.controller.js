@@ -139,6 +139,9 @@ function checkReservationDate(req, res, next) {
   const {
     data: { reservation_date, reservation_time },
   } = req.body;
+  const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
+  const today = new Date();
+  const requiredFormat = /\d\d\d\d-\d\d-\d\d/;
 
   if (!reservation_date) {
     return next({
@@ -154,8 +157,12 @@ function checkReservationDate(req, res, next) {
     });
   }
 
-  const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
-  const today = new Date();
+  if (!reservation_date.match(requiredFormat)) {
+    return next({
+      status: 400,
+      message: "reservation_date must be in this format: 'YYYY-MM-DD'",
+    });
+  }
 
   if (dateToCheck.getUTCDay() === 2) {
     return next({
@@ -177,6 +184,7 @@ function checkReservationTime(req, res, next) {
   const {
     data: { reservation_time },
   } = req.body;
+  const requiredFormat = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
 
   if (!reservation_time) {
     return next({
@@ -189,6 +197,13 @@ function checkReservationTime(req, res, next) {
     return next({
       status: 400,
       message: "Reservation time cannot be blank.",
+    });
+  }
+
+  if (!reservation_time.match(requiredFormat)) {
+    return next({
+      status: 400,
+      message: "reservation_time must have the required format. ( ex: 12:30 )",
     });
   }
 
@@ -229,7 +244,7 @@ function checkPeople(req, res, next) {
     });
   }
 
-  if (isNaN(people)) {
+  if (typeof people !== "number") {
     return next({
       status: 400,
       message: "Only include numbers for the amount of people in your party.",
