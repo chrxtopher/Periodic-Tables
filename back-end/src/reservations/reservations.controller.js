@@ -210,6 +210,35 @@ function checkReservationTime(req, res, next) {
   next();
 }
 
+function checkPeople(req, res, next) {
+  const {
+    data: { people },
+  } = req.body;
+
+  if (!people) {
+    return next({
+      status: 400,
+      message: "Please let us know how many people will be in your party.",
+    });
+  }
+
+  if (people === 0 || people <= 0) {
+    return next({
+      status: 400,
+      message: "Minimum of one person per reservation.",
+    });
+  }
+
+  if (isNaN(people)) {
+    return next({
+      status: 400,
+      message: "Only include numbers for the amount of people in your party.",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list,
   create: [
@@ -219,6 +248,7 @@ module.exports = {
     checkMobileNumber,
     checkReservationDate,
     checkReservationTime,
+    checkPeople,
     create,
   ],
   read: [reservationExists, read],
