@@ -35,6 +35,8 @@ function checkData(req, res, next) {
       message: "A data key is required in the request body.",
     });
   }
+
+  next();
 }
 
 function checkTableName(req, res, next) {
@@ -62,6 +64,29 @@ function checkTableName(req, res, next) {
       message: "table_name must be at least 2 characters long.",
     });
   }
+  next();
+}
+
+function checkTableCapacityPOST(res, res, next) {
+  // checks capacity value when creating a new table
+  const {
+    data: { capacity },
+  } = req.body;
+
+  if (!capacity || capacity < 0) {
+    return next({
+      status: 400,
+      message: "A capaciy greater than zero is required.",
+    });
+  }
+
+  if (typeof capacity !== "number") {
+    return next({
+      status: 400,
+      message: "capacity must be a number.",
+    });
+  }
+
   next();
 }
 
@@ -105,7 +130,8 @@ async function reservationExists(req, res, next) {
   }
 }
 
-async function checkTableCapacity(req, res, next) {
+async function checkTableCapacityPUT(req, res, next) {
+  // checks the table capacity when updating an existing table
   const table = res.locals.table;
   const reservation = res.locals.reservation;
 
@@ -134,14 +160,14 @@ async function checkIfTableIsOccupied(req, res, next) {
 
 module.exports = {
   list,
-  create: [checkData, checkTableName, create],
+  create: [checkData, checkTableName, checkTableCapacityPOST, create],
   read: [tableExists, read],
   update: [
     checkData,
     reservationExists,
     tableExists,
     checkIfTableIsOccupied,
-    checkTableCapacity,
+    checkTableCapacityPUT,
     update,
   ],
 };
