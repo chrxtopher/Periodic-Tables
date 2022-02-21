@@ -84,7 +84,7 @@ function ReservationForm() {
 
   return (
     <>
-      <h1 className="display-4 text-center mt-3">Create a Reservation</h1>
+      <h1 className="display-4 text-center mt-3">Reservation Form</h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit} className="m-5">
         <div>
