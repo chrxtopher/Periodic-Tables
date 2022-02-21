@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { createReservation } from "../utils/api";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  createReservation,
+  readReservation,
+  updateReservation,
+} from "../utils/api";
+import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-
 const emptyReservationForm = {
   first_name: "",
   last_name: "",
@@ -14,8 +17,33 @@ const emptyReservationForm = {
 
 function ReservationForm() {
   const history = useHistory();
-  const [newReservation, setNewReservation] = useState({});
+  const [newReservation, setNewReservation] = useState({
+    ...emptyReservationForm,
+  });
   const [error, setError] = useState(null);
+  const { reservation_id } = useParams();
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    async function checkForReservation() {
+      try {
+        if (reservation_id) {
+          const data = await readReservation(
+            reservation_id,
+            abortController.signal
+          );
+          setNewReservation(data);
+        } else {
+          setNewReservation({ ...emptyReservationForm });
+        }
+      } catch (error) {
+        setError(error);
+      }
+    }
+    checkForReservation();
+
+    return () => abortController.abort();
+  }, [reservation_id]);
 
   ////////////////////
   // HANDLERS BELOW //
@@ -28,13 +56,26 @@ function ReservationForm() {
     });
   };
 
+  const handlePeopleChange = (event) => {
+    setNewReservation({
+      ...newReservation,
+      [event.target.name]: Number(event.target.value),
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
     try {
-      await createReservation(newReservation, abortController.signal);
-      setNewReservation({ ...emptyReservationForm });
-      history.push(`/dashboard?date=${newReservation.reservation_date}`);
+      if (reservation_id) {
+        await updateReservation(newReservation, abortController.signal);
+        history.push(`/dashboard?date=${newReservation.reservation_date}`);
+        setNewReservation({ ...emptyReservationForm });
+      } else {
+        await createReservation(newReservation, abortController.signal);
+        history.push(`/dashboard?date=${newReservation.reservation_date}`);
+        setNewReservation({ ...emptyReservationForm });
+      }
     } catch (error) {
       setError(error);
     }
@@ -43,7 +84,7 @@ function ReservationForm() {
 
   return (
     <>
-      <h1 className="display-4 text-center mt-3">Create a Reservation</h1>
+      <h1 className="display-4 text-center mt-3">Reservation Form</h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit} className="m-5">
         <div>
@@ -57,6 +98,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
+                value={newReservation.first_name}
                 placeholder="First Name"
                 required
               />
@@ -70,6 +112,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
+                value={newReservation.last_name}
                 placeholder="Last Name"
                 required
               />
@@ -85,6 +128,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
+                value={newReservation.mobile_number}
                 placeholder="xxx-xxx-xxxx"
                 required
               />
@@ -95,11 +139,12 @@ function ReservationForm() {
               </label>
               <input
                 name="people"
+                onChange={handlePeopleChange}
                 className="form-control shadow"
                 type="number"
                 min={1}
+                value={newReservation.people}
                 placeholder="1"
-                onChange={handleChange}
                 required
               />
             </div>
@@ -111,9 +156,10 @@ function ReservationForm() {
               </label>
               <input
                 name="reservation_date"
+                onChange={handleChange}
                 className="form-control shadow"
                 type="date"
-                onChange={handleChange}
+                value={newReservation.reservation_date}
                 required
               />
               <small className="m-2">Closed on Tuesday</small>
@@ -124,9 +170,10 @@ function ReservationForm() {
               </label>
               <input
                 name="reservation_time"
+                onChange={handleChange}
                 className="form-control shadow"
                 type="time"
-                onChange={handleChange}
+                value={newReservation.reservation_time}
                 required
               />
               <small className="m-2">Between 10:30 AM - 9:30 PM</small>

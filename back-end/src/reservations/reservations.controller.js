@@ -1,4 +1,5 @@
 const reservationsService = require("./reservations.service");
+const VALID_STATUS = ["booked", "seated", "finished", "cancelled"];
 
 async function list(req, res) {
   const { date } = req.query;
@@ -19,9 +20,28 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
-async function read(req, res, next) {
+async function read(req, res) {
   const data = res.locals.reservation;
   res.json({ data });
+}
+
+async function update(req, res) {
+  const { reservation_id } = res.locals.reservation;
+  const reservation = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const data = await reservationsService.update(reservation);
+  res.json({ data });
+}
+
+async function updateStatus(req, res, next) {
+  const reservation_id = res.locals.reservation.reservation_id;
+  const {
+    data: { status },
+  } = req.body;
+  const data = await reservationsService.updateStatus(reservation_id, status);
+  res.status(200).json({ data });
 }
 
 ////////////////
@@ -238,17 +258,55 @@ function checkPeople(req, res, next) {
     });
   }
 
-  if (people === 0 || people <= 0) {
+  if (people <= 0) {
     return next({
       status: 400,
       message: "Minimum of one person per reservation.",
     });
   }
 
-  if (typeof Number(people) !== "number") {
+  if (typeof people !== "number") {
     return next({
       status: 400,
       message: "Only include numbers for the amount of people in your party.",
+    });
+  }
+
+  next();
+}
+
+function validateStatusPOST(req, res, next) {
+  // validates status when creating a new reservation
+  const {
+    data: { status },
+  } = req.body;
+
+  if (status === "seated" || status === "finished") {
+    return next({
+      status: 400,
+      message:
+        "New reservations cannot have a status of 'seated', 'finished', or 'cancelled'.",
+    });
+  }
+
+  next();
+}
+
+function validateStatusPUT(req, res, next) {
+  // validates status input when updating a reservation.
+  const { status } = req.body.data;
+  if (!VALID_STATUS.includes(status) || status === "unknown") {
+    return next({
+      status: 400,
+      message:
+        "Status unknown. Reservations can only have a status of 'booked', 'seated', 'finished', or 'cancelled'.",
+    });
+  }
+
+  if (res.locals.reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: "A finished reservation cannot be updated.",
     });
   }
 
@@ -265,7 +323,20 @@ module.exports = {
     checkReservationDate,
     checkReservationTime,
     checkPeople,
+    validateStatusPOST,
     create,
   ],
   read: [reservationExists, read],
+  update: [
+    reservationExists,
+    checkFirstName,
+    checkLastName,
+    checkMobileNumber,
+    checkReservationDate,
+    checkReservationTime,
+    checkPeople,
+    validateStatusPUT,
+    update,
+  ],
+  updateStatus: [reservationExists, validateStatusPUT, updateStatus],
 };

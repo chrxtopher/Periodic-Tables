@@ -1,37 +1,94 @@
 import React from "react";
+import { updateReservationStatus, cancelReservation } from "../utils/api";
+import { useHistory } from "react-router-dom";
 
-function ReservationsList({ reservations = [], noDisplayMessage, display = false }) {
+function ReservationsList({
+  reservations = [],
+  noDisplayMessage,
+  display = false,
+}) {
+  const history = useHistory();
+  const abortController = new AbortController();
+
   if (display === true) {
-      if (reservations.length === 0) {
-      return <h4>{noDisplayMessage}</h4>
+    if (reservations.length === 0) {
+      return <h4>{noDisplayMessage}</h4>;
     } else {
-        return reservations.map((reservation) => {
+      return reservations.map((reservation) => {
+        const handleSeatClick = async () => {
+          await updateReservationStatus(reservation, abortController.signal);
+          history.go();
+        };
+
+        const handleCancelClick = async () => {
+          if (
+            window.confirm(
+              "Do you want to cancel this reservation? This cannot be undone."
+            )
+          ) {
+            await cancelReservation(
+              reservation.reservation_id,
+              abortController.signal
+            );
+            history.go();
+          }
+        };
+
         return (
-          <div
-            className="card bg-light border-dark m-4 shadow"
-            key={reservation.reservation_id}
-          >
-            <div className="card-body">
-              <h4 className="card-title text-center">
-                {reservation.first_name} {reservation.last_name} : Party of{" "}
-                {reservation.people}
-              </h4>
-              <p className="card-text text-center">
-                <strong>Contact:</strong> {reservation.mobile_number}
-              </p>
-              <p className="card-text text-center">
-                <strong>Date:</strong> {reservation.reservation_date}
-              </p>
-              <p className="card-text text-center">
-                <strong>Time:</strong> {reservation.reservation_time}
-              </p>
-            </div>
-            <a
-              className="btn btn-success border border-dark"
-              href={`/reservations/${reservation.reservation_id}/seat`}
-            >
-              Seat
-            </a>
+          <div key={reservation.reservation_id}>
+            {reservation.status !== "finished" && (
+              <div className="card bg-light border-dark m-4 shadow">
+                <div className="card-body">
+                  <h4 className="card-title text-center">
+                    {reservation.first_name} {reservation.last_name} : Party of{" "}
+                    {reservation.people}
+                  </h4>
+                  <p className="card-text text-center">
+                    <strong>Contact:</strong> {reservation.mobile_number}
+                  </p>
+                  <p className="card-text text-center">
+                    <strong>Date:</strong> {reservation.reservation_date}
+                  </p>
+                  <p className="card-text text-center">
+                    <strong>Time:</strong> {reservation.reservation_time}
+                  </p>
+                  <p
+                    data-reservation-id-status={reservation.reservation_id}
+                    className="card-text text-center"
+                  >
+                    <strong>Status: </strong> {reservation.status.toUpperCase()}
+                  </p>
+                  {reservation.status === "booked" && (
+                    <div className="d-flex justify-content-center">
+                      <a
+                        href={`/reservations/${reservation.reservation_id}/seat`}
+                      >
+                        <button
+                          onClick={handleSeatClick}
+                          className="btn btn-success border border-dark shadow mx-2"
+                        >
+                          Seat
+                        </button>
+                      </a>
+                      <a
+                        href={`/reservations/${reservation.reservation_id}/edit`}
+                      >
+                        <button className="btn btn-warning border border-dark shadow mx-2">
+                          Edit
+                        </button>
+                      </a>
+                      <button
+                        onClick={handleCancelClick}
+                        data-reservation-id-cancel={reservation.reservation_id}
+                        className="btn btn-danger border border-dark shadow mx-2"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
       });
