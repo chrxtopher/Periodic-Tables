@@ -1,11 +1,19 @@
 import React from "react";
 
-function ReservationsList({ reservations = [], noDisplayMessage, display = false }) {
+function ReservationsList({
+  reservations = [],
+  noDisplayMessage,
+  display = false,
+}) {
+  const handleSeatClick = async () => {
+    ///
+  };
+
   if (display === true) {
-      if (reservations.length === 0) {
-      return <h4>{noDisplayMessage}</h4>
+    if (reservations.length === 0) {
+      return <h4>{noDisplayMessage}</h4>;
     } else {
-        return reservations.map((reservation) => {
+      return reservations.map((reservation) => {
         return (
           <div
             className="card bg-light border-dark m-4 shadow"
@@ -25,13 +33,25 @@ function ReservationsList({ reservations = [], noDisplayMessage, display = false
               <p className="card-text text-center">
                 <strong>Time:</strong> {reservation.reservation_time}
               </p>
+              <p
+                data-reservation-id-status={reservation.reservation_id}
+                className="card-text text-center"
+              >
+                <strong>Status: </strong> {reservation.status.toUpperCase()}
+              </p>
+              {reservation.status === "booked" && (
+                <div className="d-flex justify-content-center">
+                  <a href={`/reservations/${reservation.reservation_id}/seat`}>
+                    <button
+                      onClick={handleSeatClick}
+                      className="btn-lg btn-success border border-dark"
+                    >
+                      Seat
+                    </button>
+                  </a>
+                </div>
+              )}
             </div>
-            <a
-              className="btn btn-success border border-dark"
-              href={`/reservations/${reservation.reservation_id}/seat`}
-            >
-              Seat
-            </a>
           </div>
         );
       });
