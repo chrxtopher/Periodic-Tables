@@ -51,9 +51,16 @@ function ReservationsList({
                       >
                         <button
                           onClick={handleSeatClick}
-                          className="btn btn-success border border-dark shadow"
+                          className="btn btn-success border border-dark shadow mx-2"
                         >
                           Seat
+                        </button>
+                      </a>
+                      <a
+                        href={`/reservations/${reservation.reservation_id}/edit`}
+                      >
+                        <button className="btn btn-warning border border-dark shadow mx-2">
+                          Edit
                         </button>
                       </a>
                     </div>
