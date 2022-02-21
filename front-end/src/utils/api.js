@@ -109,17 +109,16 @@ export async function finishTable(table_id) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
-    headers,
   };
   return await fetchJson(url, options);
 }
 
-export async function updateReservationStatus(reservation_id, status, signal) {
-  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+export async function updateReservationStatus(reservation, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}/status`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: { status } }),
+    body: JSON.stringify({ reservation }),
     signal,
   };
   return await fetchJson(url, options);

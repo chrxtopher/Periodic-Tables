@@ -1,10 +1,9 @@
 import React from "react";
-import { finishTable, updateReservationStatus } from "../utils/api";
+import { finishTable } from "../utils/api";
 import { useHistory } from "react-router-dom";
 
 function TablesList({ tables, reservations }) {
   const history = useHistory();
-  const abortController = new AbortController();
   return tables.map((table) => {
     const reservation = table.reservation_id
       ? reservations.find((reservation) => {
@@ -27,11 +26,6 @@ function TablesList({ tables, reservations }) {
           "Is this table ready to seat new guests? This cannot be undone."
         )
       ) {
-        await updateReservationStatus(
-          table.reservation_id,
-          "finished",
-          abortController.signal
-        );
         await finishTable(table.table_id);
         history.go();
       }

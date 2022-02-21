@@ -16,11 +16,7 @@ function ReservationsList({
     } else {
       return reservations.map((reservation) => {
         const handleSeatClick = async () => {
-          await updateReservationStatus(
-            reservation.reservation_id,
-            "seated",
-            abortController.signal
-          );
+          await updateReservationStatus(reservation, abortController.signal);
           history.go();
         };
 

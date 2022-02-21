@@ -248,14 +248,14 @@ function checkPeople(req, res, next) {
     });
   }
 
-  if (people === 0 || people <= 0) {
+  if (people <= 0) {
     return next({
       status: 400,
       message: "Minimum of one person per reservation.",
     });
   }
 
-  if (typeof Number(people) !== "number") {
+  if (typeof people !== "number") {
     return next({
       status: 400,
       message: "Only include numbers for the amount of people in your party.",

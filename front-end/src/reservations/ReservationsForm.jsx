@@ -28,6 +28,13 @@ function ReservationForm() {
     });
   };
 
+  const handlePeopleChange = (event) => {
+    setNewReservation({
+      ...newReservation,
+      [event.target.name]: Number(event.target.value),
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
@@ -98,8 +105,8 @@ function ReservationForm() {
                 className="form-control shadow"
                 type="number"
                 min={1}
-                placeholder="1"
-                onChange={handleChange}
+                placeholder={1}
+                onChange={handlePeopleChange}
                 required
               />
             </div>
