@@ -30,7 +30,7 @@ async function updateStatus(req, res, next) {
     data: { status },
   } = req.body;
   const data = await reservationsService.updateStatus(reservation_id, status);
-  res.status(201).json({ data });
+  res.status(200).json({ data });
 }
 
 ////////////////
@@ -151,6 +151,7 @@ function checkReservationDate(req, res, next) {
   const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
   const today = new Date();
   const requiredFormat = /\d\d\d\d-\d\d-\d\d/;
+  const VALID_STATUS = ["booked", "seated", "finished"];
 
   if (!reservation_date) {
     return next({
@@ -264,6 +265,38 @@ function checkPeople(req, res, next) {
   next();
 }
 
+function validateStatusPOST(req, res, next) {
+  // validates status when creating a new reservation
+  const {
+    data: { status },
+  } = req.body;
+
+  if (status === "seated" || status === "finished") {
+    return next({
+      status: 400,
+      message: "New reservations can only have a status of 'booked'.",
+    });
+  }
+
+  if (!VALID_STATUS.includes(status)) {
+    return next({
+      status: 400,
+      message: "New reservations can only have a status of 'booked'.",
+    });
+  }
+
+  next();
+}
+
+function validateStatusPUT(req, res, next) {
+  // validates status input when updating a reservation.
+  const {
+    data: { status },
+  } = req.body;
+
+  next();
+}
+
 module.exports = {
   list,
   create: [
@@ -274,6 +307,7 @@ module.exports = {
     checkReservationDate,
     checkReservationTime,
     checkPeople,
+    validateStatusPOST,
     create,
   ],
   read: [reservationExists, read],
