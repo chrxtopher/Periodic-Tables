@@ -1,5 +1,5 @@
 const reservationsService = require("./reservations.service");
-const VALID_STATUS = ["booked", "seated", "finished"];
+const VALID_STATUS = ["booked", "seated", "finished", "cancelled"];
 
 async function list(req, res) {
   const { date } = req.query;
@@ -275,7 +275,7 @@ function validateStatusPOST(req, res, next) {
     return next({
       status: 400,
       message:
-        "New reservations cannot have a status of 'seated' or 'finished'.",
+        "New reservations cannot have a status of 'seated', 'finished', or 'cancelled'.",
     });
   }
 
@@ -289,7 +289,7 @@ function validateStatusPUT(req, res, next) {
     return next({
       status: 400,
       message:
-        "Status unknown. Reservations can only have a status of 'booked', 'seated', or 'finished'.",
+        "Status unknown. Reservations can only have a status of 'booked', 'seated', 'finished', or 'cancelled'.",
     });
   }
 

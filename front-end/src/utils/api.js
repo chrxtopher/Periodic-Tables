@@ -105,6 +105,17 @@ export async function seatReservation(reservation_id, table_id) {
   return await fetchJson(url, options, {});
 }
 
+export async function cancelReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({ data: { status: "cancelled" } }),
+    headers,
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
 export async function finishTable(table_id) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {

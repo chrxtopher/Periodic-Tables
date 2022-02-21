@@ -1,5 +1,5 @@
 import React from "react";
-import { updateReservationStatus } from "../utils/api";
+import { updateReservationStatus, cancelReservation } from "../utils/api";
 import { useHistory } from "react-router-dom";
 
 function ReservationsList({
@@ -26,6 +26,10 @@ function ReservationsList({
               "Do you want to cancel this reservation? This cannot be undone."
             )
           ) {
+            await cancelReservation(
+              reservation.reservation_id,
+              abortController.signal
+            );
             history.go();
           }
         };
