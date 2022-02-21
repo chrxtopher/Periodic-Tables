@@ -19,7 +19,13 @@ function update(reservation_id, table_id) {
   return knex("tables")
     .where({ table_id })
     .update({ reservation_id })
-    .returning("*");
+    .returning("*")
+    .then(() => {
+      return knex("reservations")
+        .where({ reservation_id })
+        .update({ status: "seated" })
+        .returning("*");
+    });
 }
 
 function finishTable(table_id, reservation_id) {

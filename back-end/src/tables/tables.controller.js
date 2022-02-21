@@ -159,10 +159,18 @@ async function reservationExists(req, res, next) {
 
 function checkIfTableIsOccupied(req, res, next) {
   const table = res.locals.table;
+  const reservation = res.locals.reservation;
   if (table.reservation_id) {
     return next({
       status: 400,
       message: "This table is currently occupied.",
+    });
+  }
+
+  if (reservation.status === "seated") {
+    return next({
+      status: 400,
+      message: "This reservation is already seated.",
     });
   }
 
