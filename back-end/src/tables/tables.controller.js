@@ -28,8 +28,9 @@ async function deleteSeat(req, res) {
   clears the seating arrangement for a table
   - does not delete the whole table from the database - 
   */
-  const table_id = res.locals.table.table_id;
-  const data = await tablesService.finishTable(table_id);
+  const { table_id } = req.params;
+  const reservation_id = res.locals.table.reservation_id;
+  const data = await tablesService.finishTable(table_id, reservation_id);
   res.status(200).json({ data });
 }
 

@@ -279,13 +279,6 @@ function validateStatusPOST(req, res, next) {
     });
   }
 
-  if (!VALID_STATUS.includes(status)) {
-    return next({
-      status: 400,
-      message: "New reservations can only have a status of 'booked'.",
-    });
-  }
-
   next();
 }
 
