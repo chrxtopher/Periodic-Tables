@@ -19,9 +19,18 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
-async function read(req, res, next) {
+async function read(req, res) {
   const data = res.locals.reservation;
   res.json({ data });
+}
+
+async function updateStatus(req, res, next) {
+  const reservation_id = res.locals.reservation.reservation_id;
+  const {
+    data: { status },
+  } = req.body;
+  const data = await reservationsService.updateStatus(reservation_id, status);
+  res.status(201).json({ data });
 }
 
 ////////////////
@@ -268,4 +277,5 @@ module.exports = {
     create,
   ],
   read: [reservationExists, read],
+  updateStatus: [reservationExists, updateStatus],
 };
