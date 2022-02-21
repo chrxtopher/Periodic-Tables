@@ -20,6 +20,16 @@ function ReservationsList({
           history.go();
         };
 
+        const handleCancelClick = async () => {
+          if (
+            window.confirm(
+              "Do you want to cancel this reservation? This cannot be undone."
+            )
+          ) {
+            history.go();
+          }
+        };
+
         return (
           <div key={reservation.reservation_id}>
             {reservation.status !== "finished" && (
@@ -63,6 +73,13 @@ function ReservationsList({
                           Edit
                         </button>
                       </a>
+                      <button
+                        onClick={handleCancelClick}
+                        data-reservation-id-cancel={reservation.reservation_id}
+                        className="btn btn-danger border border-dark shadow mx-2"
+                      >
+                        Cancel
+                      </button>
                     </div>
                   )}
                 </div>
