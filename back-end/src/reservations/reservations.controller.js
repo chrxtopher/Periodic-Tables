@@ -25,6 +25,16 @@ async function read(req, res) {
   res.json({ data });
 }
 
+async function update(req, res) {
+  const { reservation_id } = res.locals.reservation;
+  const reservation = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const data = await reservationsService.update(reservation);
+  res.json({ data });
+}
+
 async function updateStatus(req, res, next) {
   const reservation_id = res.locals.reservation.reservation_id;
   const {
@@ -317,5 +327,16 @@ module.exports = {
     create,
   ],
   read: [reservationExists, read],
+  update: [
+    reservationExists,
+    checkFirstName,
+    checkLastName,
+    checkMobileNumber,
+    checkReservationDate,
+    checkReservationTime,
+    checkPeople,
+    validateStatusPUT,
+    update,
+  ],
   updateStatus: [reservationExists, validateStatusPUT, updateStatus],
 };
