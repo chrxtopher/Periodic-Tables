@@ -1,19 +1,29 @@
 import React from "react";
+import { updateReservationStatus } from "../utils/api";
+import { useHistory } from "react-router-dom";
 
 function ReservationsList({
   reservations = [],
   noDisplayMessage,
   display = false,
 }) {
-  const handleSeatClick = async () => {
-    ///
-  };
+  const history = useHistory();
+  const abortController = new AbortController();
 
   if (display === true) {
     if (reservations.length === 0) {
       return <h4>{noDisplayMessage}</h4>;
     } else {
       return reservations.map((reservation) => {
+        const handleSeatClick = async () => {
+          await updateReservationStatus(
+            reservation.reservation_id,
+            "seated",
+            abortController.signal
+          );
+          history.go();
+        };
+
         return (
           <div
             className="card bg-light border-dark m-4 shadow"
