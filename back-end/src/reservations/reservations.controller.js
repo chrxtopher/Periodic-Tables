@@ -1,4 +1,5 @@
 const reservationsService = require("./reservations.service");
+const VALID_STATUS = ["booked", "seated", "finished"];
 
 async function list(req, res) {
   const { date } = req.query;
@@ -151,7 +152,6 @@ function checkReservationDate(req, res, next) {
   const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
   const today = new Date();
   const requiredFormat = /\d\d\d\d-\d\d-\d\d/;
-  const VALID_STATUS = ["booked", "seated", "finished"];
 
   if (!reservation_date) {
     return next({
@@ -274,7 +274,8 @@ function validateStatusPOST(req, res, next) {
   if (status === "seated" || status === "finished") {
     return next({
       status: 400,
-      message: "New reservations can only have a status of 'booked'.",
+      message:
+        "New reservations cannot have a status of 'seated' or 'finished'.",
     });
   }
 
@@ -290,9 +291,21 @@ function validateStatusPOST(req, res, next) {
 
 function validateStatusPUT(req, res, next) {
   // validates status input when updating a reservation.
-  const {
-    data: { status },
-  } = req.body;
+  const { status } = req.body.data;
+  if (!VALID_STATUS.includes(status) || status === "unknown") {
+    return next({
+      status: 400,
+      message:
+        "Status unknown. Reservations can only have a status of 'booked', 'seated', or 'finished'.",
+    });
+  }
+
+  if (res.locals.reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: "A finished reservation cannot be updated.",
+    });
+  }
 
   next();
 }
@@ -311,5 +324,5 @@ module.exports = {
     create,
   ],
   read: [reservationExists, read],
-  updateStatus: [reservationExists, updateStatus],
+  updateStatus: [reservationExists, validateStatusPUT, updateStatus],
 };
