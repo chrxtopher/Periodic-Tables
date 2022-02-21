@@ -13,9 +13,10 @@ function TablesList({ tables, reservations }) {
       : null;
 
     const status = reservation ? (
-      <strong>
-        Occupied by: {reservation.first_name} {reservation.last_name}
-      </strong>
+      <>
+        <strong>Occupied by:</strong> {reservation.first_name}{" "}
+        {reservation.last_name}
+      </>
     ) : (
       "Free"
     );

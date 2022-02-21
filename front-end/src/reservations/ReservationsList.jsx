@@ -54,7 +54,7 @@ function ReservationsList({
                   <a href={`/reservations/${reservation.reservation_id}/seat`}>
                     <button
                       onClick={handleSeatClick}
-                      className="btn-lg btn-success border border-dark"
+                      className="btn btn-success border border-dark shadow"
                     >
                       Seat
                     </button>
