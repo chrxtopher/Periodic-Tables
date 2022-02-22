@@ -1,5 +1,6 @@
 const reservationsService = require("./reservations.service");
 const VALID_STATUS = ["booked", "seated", "finished", "cancelled"];
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   const { date } = req.query;
@@ -314,7 +315,7 @@ function validateStatusPUT(req, res, next) {
 }
 
 module.exports = {
-  list,
+  list: [asyncErrorBoundary(list)],
   create: [
     checkForData,
     checkFirstName,
@@ -324,11 +325,11 @@ module.exports = {
     checkReservationTime,
     checkPeople,
     validateStatusPOST,
-    create,
+    asyncErrorBoundary(create),
   ],
-  read: [reservationExists, read],
+  read: [reservationExists, asyncErrorBoundary(read)],
   update: [
-    reservationExists,
+    asyncErrorBoundary(reservationExists),
     checkFirstName,
     checkLastName,
     checkMobileNumber,
@@ -336,7 +337,11 @@ module.exports = {
     checkReservationTime,
     checkPeople,
     validateStatusPUT,
-    update,
+    asyncErrorBoundary(update),
   ],
-  updateStatus: [reservationExists, validateStatusPUT, updateStatus],
+  updateStatus: [
+    reservationExists,
+    validateStatusPUT,
+    asyncErrorBoundary(updateStatus),
+  ],
 };
