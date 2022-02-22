@@ -11,5 +11,3 @@ The development process included the following:
 - Project management and tracking with Github Projects
 - The use of a separate branch, "development", that periodically merged into "main".
 - Monorepo deployment with Heroku
-
-![test](./pt-images/Reservation_Form.png)
