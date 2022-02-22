@@ -12,4 +12,4 @@ The development process included the following:
 - The use of a separate branch, "development", that periodically merged into "main".
 - Monorepo deployment with Heroku
 
-![test](Reservation_Form.png)
+![test](./pt-images/Reservation_Form.png)
