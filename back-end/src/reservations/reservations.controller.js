@@ -2,7 +2,7 @@ const reservationsService = require("./reservations.service");
 const VALID_STATUS = ["booked", "seated", "finished", "cancelled"];
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-async function list(req, res) {
+async function list(req, res, next) {
   const { date } = req.query;
   const { mobile_number } = req.query;
   let data;
@@ -99,6 +99,20 @@ function checkLastName(req, res, next) {
       status: 400,
       message: "Last name cannot be blank.",
     });
+  }
+
+  next();
+}
+
+function checkMobileNumberList(req, res, next) {
+  const { mobile_number } = req.query;
+  if (mobile_number) {
+    if (!Number(mobile_number)) {
+      return next({
+        status: 400,
+        message: "Please only include numbers in your search",
+      });
+    }
   }
 
   next();
@@ -315,7 +329,7 @@ function validateStatusPUT(req, res, next) {
 }
 
 module.exports = {
-  list: [asyncErrorBoundary(list)],
+  list: [checkMobileNumberList, asyncErrorBoundary(list)],
   create: [
     checkForData,
     checkFirstName,
