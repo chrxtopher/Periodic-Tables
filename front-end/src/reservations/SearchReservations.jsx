@@ -52,7 +52,10 @@ function SearchReservations() {
             placeholder="Enter a customer's phone number"
             required
           />
-          <button className="btn btn-primary border border-dark mx-2 shadow">
+          <button
+            type="submit"
+            className="btn btn-primary border border-dark mx-2 shadow"
+          >
             Search
           </button>
         </div>

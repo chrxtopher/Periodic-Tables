@@ -30,12 +30,15 @@ function SeatReservation() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const abortController = new AbortController();
     try {
       await seatReservation(reservation_id, table.table_id);
       history.push("/");
     } catch (error) {
       setError(error);
     }
+
+    return () => abortController.signal;
   };
 
   const handleChange = (event) => {

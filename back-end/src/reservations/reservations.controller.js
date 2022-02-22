@@ -184,7 +184,7 @@ function checkReservationDate(req, res, next) {
     });
   }
 
-  if (dateToCheck.getUTCDay() === 2) {
+  if (dateToCheck.getUTCDay() === 3) {
     return next({
       status: 400,
       message: `The restaurant is closed on Tuesday. ${reservation_date} is on a Tuesday`,

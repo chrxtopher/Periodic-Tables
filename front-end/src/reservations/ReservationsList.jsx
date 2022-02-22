@@ -63,12 +63,14 @@ function ReservationsList({
                     <div className="d-flex justify-content-center">
                       <a href={`/reservations/${reservation_id}/seat`}>
                         <button
+                          type="submit"
                           onClick={handleSeatClick}
                           className="btn btn-success border border-dark shadow mx-2"
                         >
                           Seat
                         </button>
                       </a>
+
                       <a href={`/reservations/${reservation_id}/edit`}>
                         <button className="btn btn-warning border border-dark shadow mx-2">
                           Edit

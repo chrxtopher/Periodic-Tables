@@ -125,7 +125,7 @@ function checkTableCapacityPUT(req, res, next) {
     return next({
       status: 400,
       message:
-        "This table's capacity is not large enough for that reservation.",
+        "This table cannot be occupied by this party. Capacity is not large enough.",
     });
   }
 
