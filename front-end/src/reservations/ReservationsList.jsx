@@ -15,6 +15,7 @@ function ReservationsList({
       return <h4>{noDisplayMessage}</h4>;
     } else {
       return reservations.map((reservation) => {
+        const reservation_id = reservation.reservation_id;
         const handleSeatClick = async () => {
           await updateReservationStatus(reservation, abortController.signal);
           history.go();
@@ -60,9 +61,7 @@ function ReservationsList({
                   </p>
                   {reservation.status === "booked" && (
                     <div className="d-flex justify-content-center">
-                      <a
-                        href={`/reservations/${reservation.reservation_id}/seat`}
-                      >
+                      <a href={`/reservations/${reservation_id}/seat`}>
                         <button
                           onClick={handleSeatClick}
                           className="btn btn-success border border-dark shadow mx-2"
@@ -70,9 +69,7 @@ function ReservationsList({
                           Seat
                         </button>
                       </a>
-                      <a
-                        href={`/reservations/${reservation.reservation_id}/edit`}
-                      >
+                      <a href={`/reservations/${reservation_id}/edit`}>
                         <button className="btn btn-warning border border-dark shadow mx-2">
                           Edit
                         </button>

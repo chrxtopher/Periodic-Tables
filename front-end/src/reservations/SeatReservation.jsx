@@ -23,7 +23,7 @@ function SeatReservation() {
   const options = tables.map((table) => {
     return (
       <option value={table.table_id} key={table.table_id}>
-        Table: {table.table_name} - Capacity: {table.capacity}
+        {table.table_name} - {table.capacity}
       </option>
     );
   });
