@@ -2,13 +2,12 @@ import React from "react";
 
 function NoReservations() {
   return (
-    <div className="card bg-light border-dark m-4 shadow">
+    <div className="card border-light bg-light m-4 shadow-lg">
       <div className="card-body">
-        <h4 className="card-title text-center">No Reservations For This Date</h4>
-        <p className="card-text text-center">Use the navigation side-bar to create a new reservation.</p>
+        <h4 className="card-text text-center">No Reservations</h4>
       </div>
     </div>
-  )
+  );
 }
 
 export default NoReservations;

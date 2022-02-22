@@ -11,14 +11,7 @@ function TablesList({ tables, reservations }) {
         })
       : null;
 
-    const status = reservation ? (
-      <>
-        <strong>Occupied by:</strong> {reservation.first_name}{" "}
-        {reservation.last_name}
-      </>
-    ) : (
-      "Free"
-    );
+    const status = reservation ? "occupied" : "free";
 
     const handleFinish = async () => {
       if (
@@ -52,7 +45,7 @@ function TablesList({ tables, reservations }) {
             <strong>Capacity:</strong> {table.capacity}
           </p>
           <p className="text-center" data-table-id-status={`${table.table_id}`}>
-            {status}
+            {status.toUpperCase()}
           </p>
           <div className="d-flex justify-content-center">{finishButton}</div>
         </div>

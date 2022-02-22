@@ -1,7 +1,8 @@
 const reservationsService = require("./reservations.service");
 const VALID_STATUS = ["booked", "seated", "finished", "cancelled"];
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-async function list(req, res) {
+async function list(req, res, next) {
   const { date } = req.query;
   const { mobile_number } = req.query;
   let data;
@@ -103,6 +104,20 @@ function checkLastName(req, res, next) {
   next();
 }
 
+function checkMobileNumberList(req, res, next) {
+  const { mobile_number } = req.query;
+  if (mobile_number) {
+    if (!Number(mobile_number)) {
+      return next({
+        status: 400,
+        message: "Please only include numbers in your search",
+      });
+    }
+  }
+
+  next();
+}
+
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
@@ -184,7 +199,7 @@ function checkReservationDate(req, res, next) {
     });
   }
 
-  if (dateToCheck.getUTCDay() === 2) {
+  if (dateToCheck.getUTCDay() === 3) {
     return next({
       status: 400,
       message: `The restaurant is closed on Tuesday. ${reservation_date} is on a Tuesday`,
@@ -314,7 +329,7 @@ function validateStatusPUT(req, res, next) {
 }
 
 module.exports = {
-  list,
+  list: [checkMobileNumberList, asyncErrorBoundary(list)],
   create: [
     checkForData,
     checkFirstName,
@@ -324,11 +339,11 @@ module.exports = {
     checkReservationTime,
     checkPeople,
     validateStatusPOST,
-    create,
+    asyncErrorBoundary(create),
   ],
-  read: [reservationExists, read],
+  read: [reservationExists, asyncErrorBoundary(read)],
   update: [
-    reservationExists,
+    asyncErrorBoundary(reservationExists),
     checkFirstName,
     checkLastName,
     checkMobileNumber,
@@ -336,7 +351,11 @@ module.exports = {
     checkReservationTime,
     checkPeople,
     validateStatusPUT,
-    update,
+    asyncErrorBoundary(update),
   ],
-  updateStatus: [reservationExists, validateStatusPUT, updateStatus],
+  updateStatus: [
+    reservationExists,
+    validateStatusPUT,
+    asyncErrorBoundary(updateStatus),
+  ],
 };

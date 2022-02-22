@@ -1,5 +1,6 @@
 const tablesService = require("./tables.service");
 const reservationsService = require("../reservations/reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   const data = await tablesService.list();
@@ -125,7 +126,7 @@ function checkTableCapacityPUT(req, res, next) {
     return next({
       status: 400,
       message:
-        "This table's capacity is not large enough for that reservation.",
+        "This table cannot be occupied by this party. Capacity is not large enough.",
     });
   }
 
@@ -189,16 +190,25 @@ function validateClearTable(req, res, next) {
 }
 
 module.exports = {
-  list,
-  create: [checkData, checkTableName, checkTableCapacityPOST, create],
-  read: [tableExists, read],
+  list: [asyncErrorBoundary(list)],
+  create: [
+    checkData,
+    checkTableName,
+    checkTableCapacityPOST,
+    asyncErrorBoundary(create),
+  ],
+  read: [tableExists, asyncErrorBoundary(read)],
   update: [
     checkData,
-    reservationExists,
-    tableExists,
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(tableExists),
     checkIfTableIsOccupied,
     checkTableCapacityPUT,
-    update,
+    asyncErrorBoundary(update),
   ],
-  finishTable: [tableExists, validateClearTable, deleteSeat],
+  finishTable: [
+    asyncErrorBoundary(tableExists),
+    validateClearTable,
+    asyncErrorBoundary(deleteSeat),
+  ],
 };
