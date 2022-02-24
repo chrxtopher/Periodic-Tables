@@ -16,14 +16,13 @@ function read(table_id) {
 }
 
 function update(reservation_id, table_id) {
-  return knex("tables")
-    .where({ table_id })
-    .update({ reservation_id })
-    .returning("*")
+  return knex("reservations")
+    .where({ reservation_id })
+    .update({ status: "seated" })
     .then(() => {
-      return knex("reservations")
-        .where({ reservation_id })
-        .update({ status: "seated" })
+      return knex("tables")
+        .where({ table_id })
+        .update({ reservation_id })
         .returning("*");
     });
 }

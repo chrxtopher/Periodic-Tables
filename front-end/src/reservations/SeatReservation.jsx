@@ -14,8 +14,13 @@ function SeatReservation() {
   useEffect(() => {
     async function loadTables() {
       const abortController = new AbortController();
-      const tables = await listTables(abortController.signal);
-      setTables(tables);
+      setError(null);
+      try {
+        const tables = await listTables(abortController.signal);
+        setTables(tables);
+      } catch (error) {
+        setError(error);
+      }
     }
     loadTables();
   }, []);
@@ -32,13 +37,17 @@ function SeatReservation() {
     event.preventDefault();
     const abortController = new AbortController();
     try {
-      await seatReservation(reservation_id, table.table_id);
-      history.push("/");
+      await seatReservation(
+        reservation_id,
+        Number(table.table_id),
+        abortController.signal
+      );
+      history.push("/dashboard");
     } catch (error) {
       setError(error);
     }
 
-    return () => abortController.signal;
+    return () => abortController.abort();
   };
 
   const handleChange = (event) => {
@@ -60,9 +69,7 @@ function SeatReservation() {
             name="table_id"
             className="form-control"
           >
-            <option value={"Select a Table"} key={0}>
-              Select a table
-            </option>
+            <option value=""></option>
             {options}
           </select>
           <div className="d-flex justify-content-center my-5">
