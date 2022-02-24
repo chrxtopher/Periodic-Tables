@@ -104,20 +104,6 @@ function checkLastName(req, res, next) {
   next();
 }
 
-function checkMobileNumberList(req, res, next) {
-  const { mobile_number } = req.query;
-  if (mobile_number) {
-    if (!Number(mobile_number)) {
-      return next({
-        status: 400,
-        message: "Please only include numbers in your search",
-      });
-    }
-  }
-
-  next();
-}
-
 function checkMobileNumber(req, res, next) {
   const {
     data: { mobile_number },
@@ -202,7 +188,7 @@ function checkReservationDate(req, res, next) {
   if (dateToCheck.getUTCDay() === 3) {
     return next({
       status: 400,
-      message: `The restaurant is closed on Tuesday. ${reservation_date} is on a Tuesday`,
+      message: `Please choose a reservation_date and reservation_time that is not on Tuesday. The restaurant is closed on Tuesdays.`,
     });
   }
 
@@ -329,7 +315,7 @@ function validateStatusPUT(req, res, next) {
 }
 
 module.exports = {
-  list: [checkMobileNumberList, asyncErrorBoundary(list)],
+  list: [asyncErrorBoundary(list)],
   create: [
     checkForData,
     checkFirstName,
