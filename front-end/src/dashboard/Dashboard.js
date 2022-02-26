@@ -42,6 +42,7 @@ function Dashboard() {
 
   function loadTables() {
     const abortController = new AbortController();
+    setTablesError(null);
     listTables(abortController.signal).then(setTables).catch(setTablesError);
 
     return () => abortController.abort();
