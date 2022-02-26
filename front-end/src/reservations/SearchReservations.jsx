@@ -32,7 +32,7 @@ function SearchReservations() {
     <div>
       <h1 className="text-center display-4 mt-3">Search for a Reservation</h1>
       <ErrorAlert error={error} />
-      <form onSubmit={handleSubmit} className="m-5">
+      <form onSubmit={handleSubmit} className="my-5">
         <label className="m-2">Mobile Number</label>
         <div className="d-flex">
           <input
@@ -55,9 +55,7 @@ function SearchReservations() {
         {reservations.length !== 0 && (
           <ReservationsList reservations={reservations} />
         )}
-        {reservations.length === 0 && (
-          <p className="display-4">No reservations found</p>
-        )}
+        {reservations.length === 0 && <h4>No reservations found</h4>}
       </div>
     </div>
   );
