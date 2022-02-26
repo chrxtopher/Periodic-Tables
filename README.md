@@ -1,5 +1,11 @@
 # Period Tables - A Restaurant Reservation Application
 
+### Link to App
+
+[Periodic-Tables](https://periodic-tables-client-three.vercel.app/)
+
+---
+
 ### Summary
 
 ---
@@ -10,4 +16,4 @@ The development process included the following:
 
 - Project management and tracking with Github Projects
 - The use of a separate branch, "development", that periodically merged into "main".
-- Monorepo deployment with Heroku
+- Backend deployment with Heroku, frontend deployment with Vercel.
