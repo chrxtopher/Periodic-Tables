@@ -79,4 +79,4 @@ The development process included the following:
 }
 ```
 
-> At the moment, I have only used simple bootstrap styling. I plan to come back in the near future to customize this website quit a bit more!
+> At the moment, I have only used simple bootstrap styling. I plan to come back in the near future to customize this website quite a bit more!
