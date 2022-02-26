@@ -24,6 +24,8 @@ function SearchReservations() {
     } catch (error) {
       setError(error);
     }
+
+    return abortController.abort();
   };
 
   return (
@@ -50,7 +52,12 @@ function SearchReservations() {
         </div>
       </form>
       <div className="d-flex flex-wrap justify-content-center">
-        <ReservationsList reservations={reservations} />
+        {reservations.length !== 0 && (
+          <ReservationsList reservations={reservations} />
+        )}
+        {reservations.length === 0 && (
+          <p className="display-4">No reservations found</p>
+        )}
       </div>
     </div>
   );
