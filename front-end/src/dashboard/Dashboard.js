@@ -50,8 +50,8 @@ function Dashboard() {
   return (
     <main>
       <h1 className="display-4 text-center mt-3 mb-5">Dashboard</h1>
-      <h3 className="text-center">Reservations for date: {date}</h3>
-
+      <h3 className="text-center">Reservations for date:</h3>
+      <h3>{date}</h3>
       <div className="d-flex justify-content-center my-4">
         <button
           className="btn-lg btn-primary border border-dark mx-2 shadow"
