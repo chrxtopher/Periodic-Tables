@@ -160,7 +160,7 @@ function checkReservationDate(req, res, next) {
   const {
     data: { reservation_date, reservation_time },
   } = req.body;
-  const dateToCheck = new Date(`${reservation_date} ${reservation_time}`);
+  const dateToCheck = new Date(reservation_date + " " + reservation_time);
   const today = new Date();
   const requiredFormat = /\d\d\d\d-\d\d-\d\d/;
 
@@ -185,7 +185,7 @@ function checkReservationDate(req, res, next) {
     });
   }
 
-  if (dateToCheck.getUTCDay() === 2) {
+  if (dateToCheck.getUTCDay() === 3) {
     return next({
       status: 400,
       message: `Please choose a reservation_date and reservation_time that is not on Tuesday. The restaurant is closed on Tuesdays.`,
@@ -196,7 +196,7 @@ function checkReservationDate(req, res, next) {
     return next({
       status: 400,
       message:
-        "Please schedule your reservation for a date and time in the future.",
+        "Please schedule your reservation for a date and time in the future!",
     });
   }
   next();
@@ -321,13 +321,13 @@ module.exports = {
     checkFirstName,
     checkLastName,
     checkMobileNumber,
-    checkReservationDate,
     checkReservationTime,
+    checkReservationDate,
     checkPeople,
     validateStatusPOST,
     asyncErrorBoundary(create),
   ],
-  read: [reservationExists, asyncErrorBoundary(read)],
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
   update: [
     asyncErrorBoundary(reservationExists),
     checkFirstName,
