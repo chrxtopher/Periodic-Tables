@@ -23,7 +23,6 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const [date, setDate] = useState(query.get("date") || today());
-  const noReservations = "No Reservations For This Date";
 
   useEffect(loadDashboard, [date]);
   useEffect(loadTables, []);
@@ -43,6 +42,7 @@ function Dashboard() {
 
   function loadTables() {
     const abortController = new AbortController();
+    setTablesError(null);
     listTables(abortController.signal).then(setTables).catch(setTablesError);
 
     return () => abortController.abort();
@@ -51,7 +51,8 @@ function Dashboard() {
   return (
     <main>
       <h1 className="display-4 text-center mt-3 mb-5">Dashboard</h1>
-      <h3 className="text-center">Reservations for date: {date}</h3>
+      <h3 className="text-center">Reservations for date:</h3>
+      <h3 className="text-center">{date}</h3>
 
       <div className="d-flex justify-content-center my-4">
         <button
@@ -75,11 +76,7 @@ function Dashboard() {
       </div>
       <ErrorAlert error={reservationsError} />
       <section className="d-flex flex-wrap justify-content-center">
-        <ReservationsList
-          reservations={reservations}
-          noDisplayMessage={noReservations}
-          display={true}
-        />
+        <ReservationsList reservations={reservations} />
       </section>
       <h3 className="text-center my-4">Tables</h3>
       <ErrorAlert error={tablesError} />

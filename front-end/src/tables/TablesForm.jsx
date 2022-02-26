@@ -5,12 +5,12 @@ import { useHistory } from "react-router-dom";
 
 function CreateTable() {
   const history = useHistory();
-  const [newTable, setNewTable] = useState({});
   const [error, setError] = useState(null);
   const emptyTableForm = {
     table_name: "",
     capacity: "",
   };
+  const [newTable, setNewTable] = useState({ ...emptyTableForm });
 
   const handleChange = (event) => {
     setNewTable({ ...newTable, [event.target.name]: event.target.value });
@@ -48,11 +48,13 @@ function CreateTable() {
               Table Name
             </label>
             <input
-              onChange={handleChange}
+              type="text"
               name="table_name"
               className="form-control shadow"
-              type="text"
+              id="table_name"
               placeholder="Table Name"
+              value={newTable.table_name}
+              onChange={handleChange}
               required
             />
           </div>
@@ -61,12 +63,14 @@ function CreateTable() {
               Capacity
             </label>
             <input
-              onChange={handleNumberChange}
+              type="number"
               name="capacity"
               className="form-control shadow"
-              type="number"
-              min="1"
+              id="capacity"
               placeholder="1"
+              min={1}
+              value={newTable.capacity}
+              onChange={handleNumberChange}
               required
             />
           </div>
