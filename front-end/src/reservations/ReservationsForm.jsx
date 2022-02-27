@@ -17,9 +17,7 @@ const emptyReservationForm = {
 
 function ReservationForm() {
   const history = useHistory();
-  const [newReservation, setNewReservation] = useState({
-    ...emptyReservationForm,
-  });
+  const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const { reservation_id } = useParams();
 
@@ -32,9 +30,9 @@ function ReservationForm() {
             reservation_id,
             abortController.signal
           );
-          setNewReservation(data);
+          setFormData(data);
         } else {
-          setNewReservation({ ...emptyReservationForm });
+          setFormData({ ...emptyReservationForm });
         }
       } catch (error) {
         setError(error);
@@ -50,15 +48,15 @@ function ReservationForm() {
   /////////////////////
 
   const handleChange = (event) => {
-    setNewReservation({
-      ...newReservation,
+    setFormData({
+      ...formData,
       [event.target.name]: event.target.value,
     });
   };
 
   const handlePeopleChange = (event) => {
-    setNewReservation({
-      ...newReservation,
+    setFormData({
+      ...formData,
       [event.target.name]: Number(event.target.value),
     });
   };
@@ -68,13 +66,13 @@ function ReservationForm() {
     const abortController = new AbortController();
     try {
       if (reservation_id) {
-        await updateReservation(newReservation, abortController.signal);
-        history.push(`/dashboard?date=${newReservation.reservation_date}`);
-        setNewReservation({ ...emptyReservationForm });
+        await updateReservation(formData, abortController.signal);
+        history.push(`/dashboard?date=${formData.reservation_date}`);
+        setFormData({ ...emptyReservationForm });
       } else {
-        await createReservation(newReservation, abortController.signal);
-        history.push(`/dashboard?date=${newReservation.reservation_date}`);
-        setNewReservation({ ...emptyReservationForm });
+        await createReservation(formData, abortController.signal);
+        history.push(`/dashboard?date=${formData.reservation_date}`);
+        setFormData({ ...emptyReservationForm });
       }
     } catch (error) {
       setError(error);
@@ -84,7 +82,6 @@ function ReservationForm() {
 
   return (
     <>
-      <h1 className="display-4 text-center mt-3">Reservation Form</h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit} className="m-5">
         <div>
@@ -98,7 +95,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
-                value={newReservation.first_name}
+                value={formData.first_name}
                 placeholder="First Name"
                 required
               />
@@ -112,7 +109,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
-                value={newReservation.last_name}
+                value={formData.last_name}
                 placeholder="Last Name"
                 required
               />
@@ -128,7 +125,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="text"
-                value={newReservation.mobile_number}
+                value={formData.mobile_number}
                 placeholder="xxx-xxx-xxxx"
                 required
               />
@@ -143,7 +140,7 @@ function ReservationForm() {
                 className="form-control shadow"
                 type="number"
                 min={1}
-                value={newReservation.people}
+                value={formData.people}
                 placeholder="1"
                 required
               />
@@ -159,7 +156,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="date"
-                value={newReservation.reservation_date}
+                value={formData.reservation_date}
                 required
               />
               <small className="m-2">Closed on Tuesday</small>
@@ -173,7 +170,7 @@ function ReservationForm() {
                 onChange={handleChange}
                 className="form-control shadow"
                 type="time"
-                value={newReservation.reservation_time}
+                value={formData.reservation_time}
                 required
               />
               <small className="m-2">Between 10:30 AM - 9:30 PM</small>
