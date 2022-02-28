@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { listReservations } from "../utils/api";
 import ReservationsList from "./ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
-import NoReservations from "./NoReservations";
 
 function SearchReservations() {
   const [reservations, setReservations] = useState([]);
@@ -56,7 +55,9 @@ function SearchReservations() {
         {reservations.length !== 0 && (
           <ReservationsList reservations={reservations} isSearching={true} />
         )}
-        {reservations.length === 0 && <NoReservations />}
+        {reservations.length === 0 && (
+          <h3 className="text-center">No reservations found</h3>
+        )}
       </div>
     </div>
   );
