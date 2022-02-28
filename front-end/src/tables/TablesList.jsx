@@ -9,20 +9,20 @@ function TablesList({ table }) {
 
   const status = table.reservation_id ? "occupied" : "free";
 
-  const handleFinish = async () => {
+  async function handleFinish(table_id) {
     if (
       window.confirm(
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
       try {
-        await finishTable(table.table_id);
+        await finishTable(table_id);
         history.go();
       } catch (error) {
         setError(Error);
       }
     }
-  };
+  }
 
   return (
     <div>
@@ -39,7 +39,8 @@ function TablesList({ table }) {
           <div className="d-flex justify-content-center">
             {table.reservation_id && (
               <button
-                onClick={handleFinish}
+                type="submit"
+                onClick={() => handleFinish(table.table_id)}
                 data-table-id-finish={table.table_id}
                 className="btn btn-primary border border-dark shadow"
               >

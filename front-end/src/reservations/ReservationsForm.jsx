@@ -17,7 +17,7 @@ const emptyReservationForm = {
 
 function ReservationForm() {
   const history = useHistory();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ ...emptyReservationForm });
   const [error, setError] = useState(null);
   const { reservation_id } = useParams();
 
