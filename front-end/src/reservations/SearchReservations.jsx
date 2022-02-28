@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { listReservations } from "../utils/api";
 import ReservationsList from "./ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
+import NoReservations from "./NoReservations";
 
 function SearchReservations() {
   const [reservations, setReservations] = useState([]);
@@ -20,6 +21,7 @@ function SearchReservations() {
         { mobile_number: searchNumber },
         abortController.signal
       );
+      console.log(reservations);
       setReservations(data);
     } catch (error) {
       setError(error);
@@ -53,9 +55,9 @@ function SearchReservations() {
       </form>
       <div className="d-flex flex-wrap justify-content-center">
         {reservations.length !== 0 && (
-          <ReservationsList reservations={reservations} />
+          <ReservationsList reservations={reservations} isSearching={true} />
         )}
-        {reservations.length === 0 && <h4>No reservations found</h4>}
+        {reservations.length === 0 && <NoReservations />}
       </div>
     </div>
   );
